@@ -7,9 +7,9 @@ import { useEffect, useRef } from 'react'
 import Bridge from '../components/Icons/Bridge'
 import Logo from '../components/Icons/Logo'
 import Modal from '../components/Modal'
-import cloudinary from '../utils/cloudinary'
+import getResults from '../utils/cachedImages'
 import getBase64ImageUrl from '../utils/generateBlurPlaceholder'
-import type { ImageProps } from '../utils/types'
+import { ImageProps } from '../utils/types'
 import { useLastViewedPhoto } from '../utils/useLastViewedPhoto'
 
 const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
@@ -74,12 +74,12 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
               Clone and Deploy
             </a>
           </div>
-          {images.map(({ id, public_id, format, blurDataUrl }) => (
+          {images.map(({ id, index, blurDataUrl }) => (
             <Link
               key={id}
-              href={`/?photoId=${id}`}
-              as={`/p/${id}`}
-              ref={id === Number(lastViewedPhoto) ? lastViewedPhotoRef : null}
+              href={`/?photoId=${index}`}
+              as={`/p/${index}`}
+              ref={index === Number(lastViewedPhoto) ? lastViewedPhotoRef : null}
               shallow
               className="after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
             >
@@ -89,7 +89,8 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
                 style={{ transform: 'translate3d(0, 0, 0)' }}
                 placeholder="blur"
                 blurDataURL={blurDataUrl}
-                src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_scale,w_720/${public_id}.${format}`}
+                id={id}
+                src={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${id}`}
                 width={720}
                 height={480}
                 sizes="(max-width: 640px) 100vw,
@@ -104,7 +105,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
       <footer className="p-6 text-center text-white/80 sm:p-12">
         Thank you to{' '}
         <a
-          href="https://edelsonphotography.com/"
+          href="https://santoremedio.cl/"
           target="_blank"
           className="font-semibold hover:text-white"
           rel="noreferrer"
@@ -138,37 +139,17 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
 export default Home
 
 export async function getStaticProps() {
-  const results = await cloudinary.v2.search
-    .expression(`folder:${process.env.CLOUDINARY_FOLDER}/*`)
-    .sort_by('public_id', 'desc')
-    .max_results(400)
-    .execute()
-  let reducedResults: ImageProps[] = []
-
-  let i = 0
-  for (let result of results.resources) {
-    reducedResults.push({
-      id: i,
-      height: result.height,
-      width: result.width,
-      public_id: result.public_id,
-      format: result.format,
-    })
-    i++
-  }
-
-  const blurImagePromises = results.resources.map((image: ImageProps) => {
+  let results = await getResults()
+  const blurImagePromises = results.map((image) => {
     return getBase64ImageUrl(image)
   })
   const imagesWithBlurDataUrls = await Promise.all(blurImagePromises)
-
-  for (let i = 0; i < reducedResults.length; i++) {
-    reducedResults[i].blurDataUrl = imagesWithBlurDataUrls[i]
+  for (let index = 0; index < results.length; index++) {
+    results[index].blurDataUrl = imagesWithBlurDataUrls[index]
   }
-
   return {
     props: {
-      images: reducedResults,
+      images: results,
     },
   }
 }

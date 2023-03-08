@@ -46,7 +46,6 @@ export default function SharedModal({
   })
 
   let currentImage = images ? images[index] : currentPhoto
-
   return (
     <MotionConfig
       transition={{
@@ -72,15 +71,11 @@ export default function SharedModal({
                 className="absolute"
               >
                 <Image
-                  src={`https://res.cloudinary.com/${
-                    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-                  }/image/upload/c_scale,${navigation ? 'w_1280' : 'w_1920'}/${
-                    currentImage.public_id
-                  }.${currentImage.format}`}
+                  src={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}`}
                   width={navigation ? 1280 : 1920}
                   height={navigation ? 853 : 1280}
                   priority
-                  alt="Next.js Conf image"
+                  alt="Imagen de la JSConf Chile"
                   onLoadingComplete={() => setLoaded(true)}
                 />
               </motion.div>
@@ -118,7 +113,7 @@ export default function SharedModal({
               <div className="absolute top-0 right-0 flex items-center gap-2 p-3 text-white">
                 {navigation ? (
                   <a
-                    href={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/${currentImage.public_id}.${currentImage.format}`}
+                    href={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}_RAW`}
                     className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
                     target="_blank"
                     title="Open fullsize version"

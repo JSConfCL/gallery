@@ -1,17 +1,14 @@
-import cloudinary from './cloudinary'
+import { ImageProps } from "./types"
 
-let cachedResults
+let cachedResults: ImageProps[] = null
 
 export default async function getResults() {
   if (!cachedResults) {
-    const fetchedResults = await cloudinary.v2.search
-      .expression(`folder:${process.env.CLOUDINARY_FOLDER}/*`)
-      .sort_by('public_id', 'desc')
-      .max_results(400)
-      .execute()
-
-    cachedResults = fetchedResults
+    console.log('Fetching ',process.env.PHOTO_API_HOST)
+    cachedResults = await (await fetch(process.env.PHOTO_API_HOST+'/images')).json() as ImageProps[]
+    cachedResults.forEach((result, index) => {
+      result.index = index
+    })
   }
-
   return cachedResults
 }
