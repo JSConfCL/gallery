@@ -1,9 +1,8 @@
 /* eslint-disable no-unused-vars */
 export interface ImageProps {
   id: string;
+  url: string;
   index: number;
-  width: number;
-  height: number;
   blurDataUrl?: string
 }
 

@@ -73,7 +73,7 @@ export default function SharedModal({
                 <Image
                   src={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${
                     currentImage.id
-                  }${navigation ? "_1024" : "_1920"}`}
+                  }/${navigation ? "w=10280" : "w=1920"},fit=cover`}
                   width={navigation ? 1280 : 1920}
                   height={navigation ? 853 : 1280}
                   priority
@@ -115,7 +115,7 @@ export default function SharedModal({
               <div className="absolute top-0 right-0 flex items-center gap-2 p-3 text-white">
                 {navigation ? (
                   <a
-                    href={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}_RAW`}
+                    href={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}/w=10000`}
                     className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
                     target="_blank"
                     title="Open fullsize version"
@@ -137,8 +137,8 @@ export default function SharedModal({
                 <button
                   onClick={() =>
                     downloadPhoto(
-                      `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}_RAW`,
-                      `${index}.jpg`
+                      `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}/w=10000,format=png`,
+                      `${index}.png`
                     )
                   }
                   className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"

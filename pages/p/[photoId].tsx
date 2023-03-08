@@ -11,7 +11,7 @@ const Home: NextPage = ({ currentPhoto }: { currentPhoto: ImageProps }) => {
   const { photoId } = router.query
   let index = Number(photoId)
 
-  const currentPhotoUrl = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentPhoto.id}_RAW`
+  const currentPhotoUrl = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentPhoto.id}/fit=cover,w=1920`
 
   return (
     <>

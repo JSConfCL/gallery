@@ -11,14 +11,14 @@ export default async function getBase64ImageUrl(
   if (url) {
     return url;
   }
-  const response = await fetch(`${process.env.PHOTOS_HOST}/${image.id}`);
+
+  const response = await fetch(`${process.env.PHOTOS_HOST}/${image.id}/fit=cover,w=300`);
   const buffer = await response.arrayBuffer();
   const minified = await imagemin.buffer(Buffer.from(buffer), {
     plugins: [
       imageminWebp({
         quality: 15,
         lossless: 9,
-        resize: { width: 355.55555555, height: 200 },
       }),
     ],
   });
