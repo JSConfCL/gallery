@@ -12,11 +12,6 @@ import getBase64ImageUrl from '../utils/generateBlurPlaceholder'
 import { ImageProps } from '../utils/types'
 import { useLastViewedPhoto } from '../utils/useLastViewedPhoto'
 
-export const config = {
-  runtime: "experimental-edge",
-};
-
-
 const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
   const router = useRouter()
   const { photoId } = router.query
