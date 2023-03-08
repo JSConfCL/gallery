@@ -149,7 +149,7 @@ export default function SharedModal({
               </div>
               <div className="absolute top-0 left-0 flex items-center gap-2 p-3 text-white">
                 <button
-                  onClick={() => closeModal()}
+                  onClick={closeModal}
                   className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
                 >
                   {navigation ? (
@@ -200,7 +200,7 @@ export default function SharedModal({
                             ? "brightness-110 hover:brightness-110"
                             : "brightness-50 contrast-125 hover:brightness-75"
                         } h-full transform object-cover transition`}
-                        src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_scale,w_180/${public_id}.${format}`}
+                        src={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}`}
                       />
                     </motion.button>
                   ))}
