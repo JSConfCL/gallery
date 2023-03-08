@@ -33,11 +33,11 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
         <title>Next.js Conf 2022 Photos</title>
         <meta
           property="og:image"
-          content="https://nextjsconf-pics.vercel.app/og-image.png"
+          content="https://gallery.jsconf.cl/og-image.png"
         />
         <meta
           name="twitter:image"
-          content="https://nextjsconf-pics.vercel.app/og-image.png"
+          content="https://gallery.jsconf.cl/og-image.png"
         />
       </Head>
       <main className="mx-auto max-w-[1960px] p-4">
@@ -59,20 +59,20 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
             </div>
             <Logo />
             <h1 className="mt-8 mb-4 text-base font-bold uppercase tracking-widest">
-              2022 Event Photos
+              JSConf 2023
             </h1>
             <p className="max-w-[40ch] text-white/75 sm:max-w-[32ch]">
-              Our incredible Next.js community got together in San Francisco for
-              our first ever in-person conference!
+              Nuestra increible comunidad se reunió en Santiago de Chile, el 3 y
+              4 de Febrero del 2023
             </p>
-            <a
+            {/* <a
               className="pointer z-10 mt-6 rounded-lg border border-white bg-white px-3 py-2 text-sm font-semibold text-black transition hover:bg-white/10 hover:text-white md:mt-4"
               href="https://vercel.com/new/clone?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-cloudinary&project-name=nextjs-image-gallery&repository-name=with-cloudinary&env=NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,CLOUDINARY_FOLDER&envDescription=API%20Keys%20from%20Cloudinary%20needed%20to%20run%20this%20application"
               target="_blank"
               rel="noreferrer"
             >
               Clone and Deploy
-            </a>
+            </a> */}
           </div>
           {images.map(({ id, index, blurDataUrl }) => (
             <Link
@@ -105,14 +105,14 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
         </div>
       </main>
       <footer className="p-6 text-center text-white/80 sm:p-12">
-        Thank you to{" "}
+        Gracias a{" "}
         <a
           href="https://santoremedio.cl/"
           target="_blank"
           className="font-semibold hover:text-white"
           rel="noreferrer"
         >
-          Josh Edelson
+          Santo Remedio
         </a>
         ,{" "}
         <a
@@ -121,18 +121,18 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           className="font-semibold hover:text-white"
           rel="noreferrer"
         >
-          Jenny Morgan
+          Corporación JavaScript Chile
         </a>
-        , and{" "}
+        , y{" "}
         <a
-          href="https://www.garysextonphotography.com/"
+          href="http://jsconf.cl/"
           target="_blank"
           className="font-semibold hover:text-white"
           rel="noreferrer"
         >
-          Gary Sexton
+          la comunidad 💛
         </a>{" "}
-        for the pictures.
+        por las fotos.
       </footer>
     </>
   );
@@ -143,7 +143,7 @@ export default Home;
 export async function getStaticProps() {
   let results = await getResults();
   // const limit = 18
-  const limit = results.length
+  const limit = results.length;
   const blurImagePromises = results
     .filter((e, index) => index < limit)
     .map((image) => {
