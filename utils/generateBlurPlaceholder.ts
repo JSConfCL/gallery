@@ -18,7 +18,7 @@ export default async function getBase64ImageUrl(
       imageminWebp({
         quality: 15,
         lossless: 9,
-        resize: { width: 640, height: 360 },
+        resize: { width: 355.55555555, height: 200 },
       }),
     ],
   });

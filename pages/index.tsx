@@ -142,8 +142,8 @@ export default Home;
 
 export async function getStaticProps() {
   let results = await getResults();
-  const limit = 18
-  // const limit = results.length
+  // const limit = 18
+  const limit = results.length
   const blurImagePromises = results
     .filter((e, index) => index < limit)
     .map((image) => {
