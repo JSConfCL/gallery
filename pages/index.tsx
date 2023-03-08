@@ -140,11 +140,11 @@ export default Home
 
 export async function getStaticProps() {
   let results = await getResults()
-  const blurImagePromises = results.map((image) => {
+  const blurImagePromises = results.filter((e, index) => index < 18).map((image) => {
     return getBase64ImageUrl(image)
   })
   const imagesWithBlurDataUrls = await Promise.all(blurImagePromises)
-  for (let index = 0; index < results.length; index++) {
+  for (let index = 0; index < 18; index++) {
     results[index].blurDataUrl = imagesWithBlurDataUrls[index]
   }
   return {
