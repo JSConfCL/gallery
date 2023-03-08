@@ -7,8 +7,8 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
-import Image from "next/image";
-import { useState } from "react";
+import NextImage from "next/image";
+import { useEffect, useState } from "react";
 import { useSwipeable } from "react-swipeable";
 import { variants } from "../utils/animationVariants";
 import downloadPhoto from "../utils/downloadPhoto";
@@ -46,6 +46,19 @@ export default function SharedModal({
   });
 
   let currentImage = images ? images[index] : currentPhoto;
+  // Preloads the next and previous images
+  useEffect(() => {
+    let prevImageId = images ? images[index - 1] : undefined;
+    if (prevImageId) {
+      const prevImage = new Image()
+      prevImage.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${prevImageId.id}/${navigation ? "w=1280" : "w=1920"},fit=cover`
+    }
+    let nextImageId = images ? images[index + 1] : undefined;
+    if (nextImageId) {
+      const prevImage = new Image()
+      prevImage.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${nextImageId.id}/${navigation ? "w=1280" : "w=1920"},fit=cover`
+    }
+  }, [currentImage, navigation])
   return (
     <MotionConfig
       transition={{
@@ -70,10 +83,9 @@ export default function SharedModal({
                 exit="exit"
                 className="absolute"
               >
-                <Image
-                  src={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${
-                    currentImage.id
-                  }/${navigation ? "w=10280" : "w=1920"},fit=cover`}
+                <NextImage
+                  src={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id
+                    }/${navigation ? "w=1280" : "w=1920"},fit=cover`}
                   width={navigation ? 1280 : 1920}
                   height={navigation ? 853 : 1280}
                   priority
@@ -113,27 +125,24 @@ export default function SharedModal({
                 </>
               )}
               <div className="absolute top-0 right-0 flex items-center gap-2 p-3 text-white">
-                {navigation ? (
-                  <a
-                    href={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}/w=10000`}
-                    className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
-                    target="_blank"
-                    title="Open fullsize version"
-                    rel="noreferrer"
-                  >
-                    <ArrowTopRightOnSquareIcon className="h-5 w-5" />
-                  </a>
-                ) : (
-                  <a
-                    href={`https://twitter.com/intent/tweet?text=Check%20out%20this%20pic%20from%20Next.js%20Conf!%0A%0Ahttps://nextjsconf-pics.vercel.app/p/${index}`}
-                    className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
-                    target="_blank"
-                    title="Open fullsize version"
-                    rel="noreferrer"
-                  >
-                    <Twitter className="h-5 w-5" />
-                  </a>
-                )}
+                <a
+                  href={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}/w=10000`}
+                  className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
+                  target="_blank"
+                  title="Open full-size version"
+                  rel="noreferrer"
+                >
+                  <ArrowTopRightOnSquareIcon className="h-5 w-5" />
+                </a>
+                <a
+                  href={`https://twitter.com/intent/tweet?text=Mira%20esta%20foto%20de%20la%20JSConf%20Chile!%20https://gallery.jsconf.cl/p/${index}`}
+                  className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
+                  target="_blank"
+                  title="Share on Twitter"
+                  rel="noreferrer"
+                >
+                  <Twitter className="h-5 w-5" />
+                </a>
                 <button
                   onClick={() =>
                     downloadPhoto(
@@ -183,23 +192,20 @@ export default function SharedModal({
                       exit={{ width: "0%" }}
                       onClick={() => changePhotoId(id)}
                       key={id}
-                      className={`${
-                        id === index
-                          ? "z-20 rounded-md shadow shadow-black/50"
-                          : "z-10"
-                      } ${id === 0 ? "rounded-l-md" : ""} ${
-                        id === images.length - 1 ? "rounded-r-md" : ""
-                      } relative inline-block w-full shrink-0 transform-gpu overflow-hidden focus:outline-none`}
+                      className={`${id === index
+                        ? "z-20 rounded-md shadow shadow-black/50"
+                        : "z-10"
+                        } ${id === 0 ? "rounded-l-md" : ""} ${id === images.length - 1 ? "rounded-r-md" : ""
+                        } relative inline-block w-full shrink-0 transform-gpu overflow-hidden focus:outline-none`}
                     >
-                      <Image
+                      <NextImage
                         alt="small photos on the bottom"
                         width={180}
                         height={120}
-                        className={`${
-                          id === index
-                            ? "brightness-110 hover:brightness-110"
-                            : "brightness-50 contrast-125 hover:brightness-75"
-                        } h-full transform object-cover transition`}
+                        className={`${id === index
+                          ? "brightness-110 hover:brightness-110"
+                          : "brightness-50 contrast-125 hover:brightness-75"
+                          } h-full transform object-cover transition`}
                         src={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}`}
                       />
                     </motion.button>

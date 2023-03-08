@@ -1,84 +1,116 @@
-import { Dialog } from '@headlessui/react'
-import { motion } from 'framer-motion'
-import { useRouter } from 'next/router'
-import { useRef, useState } from 'react'
-import useKeypress from 'react-use-keypress'
-import type { ImageProps } from '../utils/types'
-import SharedModal from './SharedModal'
+import { Dialog, Transition } from "@headlessui/react";
+import { AnimatePresence, motion, } from "framer-motion";
+import { useRouter } from "next/router";
+import { Fragment, useRef, useState } from "react";
+import useKeypress from "react-use-keypress";
+import type { ImageProps } from "../utils/types";
+import SharedModal from "./SharedModal";
 
-export default function Modal({
-  images,
-  onClose,
-}: {
-  images: ImageProps[]
-  onClose?: () => void
-}) {
-  let overlayRef = useRef()
-  const router = useRouter()
 
-  const { photoId } = router.query
-  let index = Number(photoId)
+const InternalModal = ({ images, handleClose }: {
+  images: ImageProps[];
+  handleClose: () => void;
+}) => {
+  const router = useRouter();
 
-  const [direction, setDirection] = useState(0)
-  const [curIndex, setCurIndex] = useState(index)
+  const { photoId } = router.query;
+  let index = Number(photoId);
 
-  function handleClose() {
-    router.push('/', undefined, { shallow: true })
-    onClose()
-  }
+  const [direction, setDirection] = useState(0);
+  const [curIndex, setCurIndex] = useState(index);
+
 
   function changePhotoId(newVal: number) {
     if (newVal > index) {
-      setDirection(1)
+      setDirection(1);
     } else {
-      setDirection(-1)
+      setDirection(-1);
     }
-    setCurIndex(newVal)
+    setCurIndex(newVal);
     router.push(
       {
         query: { photoId: newVal },
       },
       `/p/${newVal}`,
       { shallow: true }
-    )
+    );
   }
 
-  useKeypress('ArrowRight', () => {
+  useKeypress("ArrowRight", () => {
     if (index + 1 < images.length) {
-      changePhotoId(index + 1)
+      changePhotoId(index + 1);
     }
-  })
+  });
 
-  useKeypress('ArrowLeft', () => {
+  useKeypress("ArrowLeft", () => {
     if (index > 0) {
-      changePhotoId(index - 1)
+      changePhotoId(index - 1);
     }
-  })
+  });
+  return <SharedModal
+    index={curIndex}
+    direction={direction}
+    images={images}
+    changePhotoId={changePhotoId}
+    closeModal={handleClose}
+    navigation={true}
+  />
+}
+export default function Modal({
+  images,
+  isOpen,
+  onClose,
+}: {
+  images: ImageProps[];
+  isOpen: boolean;
+  onClose?: () => void;
+}) {
+  let overlayRef = useRef();
+  const router = useRouter();
+  function handleClose() {
+    router.push("/", undefined, { shallow: true });
+    onClose();
+  }
 
   return (
-    <Dialog
-      static
-      open={true}
-      onClose={handleClose}
-      initialFocus={overlayRef}
-      className="fixed inset-0 z-10 flex items-center justify-center"
+    <Transition
+      show={isOpen}
+      as={Fragment}
     >
-      <Dialog.Overlay
-        ref={overlayRef}
-        as={motion.div}
-        key="backdrop"
-        className="fixed inset-0 z-30 bg-black/70 backdrop-blur-2xl"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      />
-      <SharedModal
-        index={curIndex}
-        direction={direction}
-        images={images}
-        changePhotoId={changePhotoId}
-        closeModal={handleClose}
-        navigation={true}
-      />
-    </Dialog>
-  )
+      <Dialog
+        onClose={handleClose}
+        initialFocus={overlayRef}
+        className="fixed inset-0 z-10 flex items-center justify-center"
+      >
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200 delay-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 z-30 bg-black/70 backdrop-blur-2xl" />
+        </Transition.Child>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300 delay-100"
+          enterFrom="opacity-0 scale-95"
+          enterTo="opacity-100 scale-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100 scale-100"
+          leaveTo="opacity-0 scale-95"
+        >
+          <Dialog.Panel className='relative z-50 flex aspect-[3/2] w-full max-w-7xl items-center wide:h-full xl:taller-than-854:h-auto'>
+            <InternalModal
+              images={images}
+              handleClose={handleClose}
+            />
+          </Dialog.Panel>
+        </Transition.Child>
+
+      </Dialog>
+    </Transition>
+  );
 }
