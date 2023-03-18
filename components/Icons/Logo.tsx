@@ -9,9 +9,7 @@ export default function Logo() {
       aria-labelledby="conf-logo-title-header"
       role="img"
     >
-      <title id="conf-logo-title-header">
-        Next.js Conf logo using a newly designed Next.js logo.
-      </title>
+      <title id="conf-logo-title-header">JSConf CHILE logo</title>
       <path
         fillRule="evenodd"
         clipRule="evenodd"

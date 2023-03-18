@@ -50,15 +50,19 @@ export default function SharedModal({
   useEffect(() => {
     let prevImageId = images ? images[index - 1] : undefined;
     if (prevImageId) {
-      const prevImage = new Image()
-      prevImage.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${prevImageId.id}/${navigation ? "w=1280" : "w=1920"},fit=cover`
+      const prevImage = new Image();
+      prevImage.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${
+        prevImageId.id
+      }/${navigation ? "w=1280" : "w=1920"},fit=cover`;
     }
     let nextImageId = images ? images[index + 1] : undefined;
     if (nextImageId) {
-      const prevImage = new Image()
-      prevImage.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${nextImageId.id}/${navigation ? "w=1280" : "w=1920"},fit=cover`
+      const prevImage = new Image();
+      prevImage.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${
+        nextImageId.id
+      }/${navigation ? "w=1280" : "w=1920"},fit=cover`;
     }
-  }, [currentImage, navigation])
+  }, [currentImage, navigation]);
   return (
     <MotionConfig
       transition={{
@@ -84,8 +88,7 @@ export default function SharedModal({
                 className="absolute"
               >
                 <NextImage
-                  src={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id
-                    }/${navigation ? "w=1280" : "w=1920"},fit=cover`}
+                  src={currentImage.id}
                   width={navigation ? 1280 : 1920}
                   height={navigation ? 853 : 1280}
                   priority
@@ -192,20 +195,23 @@ export default function SharedModal({
                       exit={{ width: "0%" }}
                       onClick={() => changePhotoId(id)}
                       key={id}
-                      className={`${id === index
-                        ? "z-20 rounded-md shadow shadow-black/50"
-                        : "z-10"
-                        } ${id === 0 ? "rounded-l-md" : ""} ${id === images.length - 1 ? "rounded-r-md" : ""
-                        } relative inline-block w-full shrink-0 transform-gpu overflow-hidden focus:outline-none`}
+                      className={`${
+                        id === index
+                          ? "z-20 rounded-md shadow shadow-black/50"
+                          : "z-10"
+                      } ${id === 0 ? "rounded-l-md" : ""} ${
+                        id === images.length - 1 ? "rounded-r-md" : ""
+                      } relative inline-block w-full shrink-0 transform-gpu overflow-hidden focus:outline-none`}
                     >
                       <NextImage
                         alt="small photos on the bottom"
                         width={180}
                         height={120}
-                        className={`${id === index
-                          ? "brightness-110 hover:brightness-110"
-                          : "brightness-50 contrast-125 hover:brightness-75"
-                          } h-full transform object-cover transition`}
+                        className={`${
+                          id === index
+                            ? "brightness-110 hover:brightness-110"
+                            : "brightness-50 contrast-125 hover:brightness-75"
+                        } h-full transform object-cover transition`}
                         src={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}`}
                       />
                     </motion.button>

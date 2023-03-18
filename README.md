@@ -1,31 +1,27 @@
-# Next.js & Cloudinary example app
+# JSconf Gallery
 
-This example shows how to create an image gallery site using Next.js, [Cloudinary](https://cloudinary.com), and [Tailwind](https://tailwindcss.com).
+> Este repositorio es un fork de https://github.com/vercel/next.js/tree/canary/examples/with-cloudinary, basado en Next.js & Cloudflare Images.
 
-## Deploy your own
+## Como usar:
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or view the demo [here](https://nextconf-images.vercel.app/)
+- `git clone git@github.com:JSConfCL/gallery.git`
+- `cd gallery`
+- `yarn`
+- `yarn dev`
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-cloudinary&project-name=nextjs-image-gallery&repository-name=with-cloudinary&env=NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,CLOUDINARY_FOLDER&envDescription=API%20Keys%20from%20Cloudinary%20needed%20to%20run%20this%20application.)
+## Deploy:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Mergear a main. Correra un proceso en Cloudflare pages y estamos 😃
+- https://gallery.jsconf.cl/
 
-## How to use
+## Referencias:
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example::
+- Next.js: https://nextjs.org/
+- Cloudflare Images: https://developers.cloudflare.com/images/
+- Cloudflare Pages: https://pages.cloudflare.com/
 
-```bash
- npx create-next-app --example with-cloudinary nextjs-image-gallery
-```
+## Contribuir:
 
-```bash
-yarn create next-app --example with-cloudinary nextjs-image-gallery
-```
-
-```bash
-pnpm create next-app --example with-cloudinary nextjs-image-gallery
-```
-
-## References
-
-- Cloudinary API: https://cloudinary.com/documentation/transformation_reference
+- [ ] Agregar un botón que permita compartir la foto en redes sociales.
+- [ ] Agregar analytics (mediante cloudflare cdn)
+- [ ] Agregar un botón que permita compartir la foto en redes sociales.
