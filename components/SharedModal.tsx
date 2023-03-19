@@ -28,7 +28,7 @@ export default function SharedModal({
   const [loaded, setLoaded] = useState(false);
 
   let filteredImages = images?.filter((img: ImageProps) =>
-    range(index - 15, index + 15).includes(img.id)
+    range(index - 15, index + 15).includes(img.index)
   );
 
   const handlers = useSwipeable({
@@ -49,19 +49,21 @@ export default function SharedModal({
   // Preloads the next and previous images
   useEffect(() => {
     let prevImageId = images ? images[index - 1] : undefined;
-    if (prevImageId) {
-      const prevImage = new Image();
-      prevImage.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${
-        prevImageId.id
-      }/${navigation ? "w=1280" : "w=1920"},fit=cover`;
-    }
-    let nextImageId = images ? images[index + 1] : undefined;
-    if (nextImageId) {
-      const prevImage = new Image();
-      prevImage.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${
-        nextImageId.id
-      }/${navigation ? "w=1280" : "w=1920"},fit=cover`;
-    }
+    // TODO: Figure out a way to preload images that takes care of image size and quality that is more dynamic.
+
+    // if (prevImageId) {
+    //   const prevImage = new Image();
+    //   prevImage.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${prevImageId.id}/w=1920,quality=75`;
+    //   const prevImage2 = new Image();
+    //   prevImage2.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${prevImageId.id}/w=1920,quality=75`;
+    // }
+    // let nextImageId = images ? images[index + 1] : undefined;
+    // if (nextImageId) {
+    //   const prevImage = new Image();
+    //   prevImage.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${nextImageId.id}/w=1920,quality=75`;
+    //   const prevImage2 = new Image();
+    //   prevImage2.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${nextImageId.id}/w=1920,quality=75`;
+    // }
   }, [currentImage, navigation]);
   return (
     <MotionConfig
@@ -71,136 +73,176 @@ export default function SharedModal({
       }}
     >
       <div
-        className="relative z-50 flex aspect-[3/2] w-full max-w-7xl items-center wide:h-full xl:taller-than-854:h-auto"
-        {...handlers}
+        id="wrapper1"
+        className="fixed inset-0 z-10 flex items-center justify-center"
       >
-        {/* Main image */}
-        <div className="w-full overflow-hidden">
-          <div className="relative flex aspect-[3/2] items-center justify-center">
-            <AnimatePresence initial={false} custom={direction}>
-              <motion.div
-                key={index}
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                className="absolute"
-              >
-                <NextImage
-                  src={currentImage.id}
-                  width={navigation ? 1280 : 1920}
-                  height={navigation ? 853 : 1280}
-                  priority
-                  alt="Imagen de la JSConf Chile"
-                  onLoadingComplete={() => setLoaded(true)}
-                />
-              </motion.div>
+        <div
+          className="relative z-50 flex aspect-[3/2] w-full max-w-7xl items-center wide:h-full xl:taller-than-854:h-auto"
+          {...handlers}
+        >
+          {/* Main image */}
+          <div className="w-full overflow-hidden">
+            <div className="relative flex aspect-[3/2] items-center justify-center">
+              <AnimatePresence initial={false} custom={direction}>
+                <motion.div
+                  key={index}
+                  custom={direction}
+                  variants={variants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="absolute"
+                >
+                  <NextImage
+                    src={currentImage.id}
+                    width={navigation ? 1280 : 1920}
+                    height={navigation ? 853 : 1280}
+                    priority
+                    alt="Imagen de la JSConf Chile"
+                    onLoadingComplete={() =>
+                      setTimeout(() => setLoaded(true), 300)
+                    }
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Buttons + bottom nav bar */}
+          <div
+            id="buttons"
+            className="absolute inset-0 z-50 mx-auto flex max-w-7xl items-center justify-center"
+          >
+            {/* Buttons */}
+            <AnimatePresence initial={true}>
+              {loaded && (
+                <motion.div
+                  animate={{ opacity: 1 }}
+                  initial={{
+                    opacity: 0,
+                  }}
+                  exit={{ opacity: 0 }}
+                  id="Buttons"
+                  className="relative aspect-[3/2] max-h-full w-full"
+                >
+                  {navigation && (
+                    <>
+                      {index > 0 && (
+                        <button
+                          className="absolute left-3 top-[calc(50%-16px)] rounded-full bg-black/50 p-3 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white focus:outline-none"
+                          style={{ transform: "translate3d(0, 0, 0)" }}
+                          onClick={() => changePhotoId(index - 1)}
+                        >
+                          <ChevronLeftIcon className="h-6 w-6" />
+                        </button>
+                      )}
+                      {index + 1 < images.length && (
+                        <button
+                          className="absolute right-3 top-[calc(50%-16px)] rounded-full bg-black/50 p-3 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white focus:outline-none"
+                          style={{ transform: "translate3d(0, 0, 0)" }}
+                          onClick={() => changePhotoId(index + 1)}
+                        >
+                          <ChevronRightIcon className="h-6 w-6" />
+                        </button>
+                      )}
+                    </>
+                  )}
+                  <div className="absolute top-0 right-0 flex items-center gap-2 p-3 text-white">
+                    <a
+                      href={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}/w=10000`}
+                      className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
+                      target="_blank"
+                      title="Open full-size version"
+                      rel="noreferrer"
+                    >
+                      <ArrowTopRightOnSquareIcon className="h-5 w-5" />
+                    </a>
+                    <a
+                      href={`https://twitter.com/intent/tweet?text=Mira%20esta%20foto%20de%20la%20JSConf%20Chile!%20https://gallery.jsconf.cl/p/${index}`}
+                      className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
+                      target="_blank"
+                      title="Share on Twitter"
+                      rel="noreferrer"
+                    >
+                      <Twitter className="h-5 w-5" />
+                    </a>
+                    <button
+                      onClick={() =>
+                        downloadPhoto(
+                          `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}/w=10000,format=png`,
+                          `${index}.png`
+                        )
+                      }
+                      className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
+                      title="Download fullsize version"
+                    >
+                      <ArrowDownTrayIcon className="h-5 w-5" />
+                    </button>
+                  </div>
+                  <div className="absolute top-0 left-0 flex items-center gap-2 p-3 text-white">
+                    <button
+                      onClick={closeModal}
+                      className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
+                    >
+                      {navigation ? (
+                        <XMarkIcon className="h-5 w-5" />
+                      ) : (
+                        <ArrowUturnLeftIcon className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+                </motion.div>
+              )}
             </AnimatePresence>
+            {/* Bottom Nav bar */}
           </div>
         </div>
+      </div>
 
-        {/* Buttons + bottom nav bar */}
-        <div className="absolute inset-0 mx-auto flex max-w-7xl items-center justify-center">
-          {/* Buttons */}
-          {loaded && (
-            <div className="relative aspect-[3/2] max-h-full w-full">
-              {navigation && (
-                <>
-                  {index > 0 && (
-                    <button
-                      className="absolute left-3 top-[calc(50%-16px)] rounded-full bg-black/50 p-3 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white focus:outline-none"
-                      style={{ transform: "translate3d(0, 0, 0)" }}
-                      onClick={() => changePhotoId(index - 1)}
-                    >
-                      <ChevronLeftIcon className="h-6 w-6" />
-                    </button>
-                  )}
-                  {index + 1 < images.length && (
-                    <button
-                      className="absolute right-3 top-[calc(50%-16px)] rounded-full bg-black/50 p-3 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white focus:outline-none"
-                      style={{ transform: "translate3d(0, 0, 0)" }}
-                      onClick={() => changePhotoId(index + 1)}
-                    >
-                      <ChevronRightIcon className="h-6 w-6" />
-                    </button>
-                  )}
-                </>
-              )}
-              <div className="absolute top-0 right-0 flex items-center gap-2 p-3 text-white">
-                <a
-                  href={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}/w=10000`}
-                  className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
-                  target="_blank"
-                  title="Open full-size version"
-                  rel="noreferrer"
-                >
-                  <ArrowTopRightOnSquareIcon className="h-5 w-5" />
-                </a>
-                <a
-                  href={`https://twitter.com/intent/tweet?text=Mira%20esta%20foto%20de%20la%20JSConf%20Chile!%20https://gallery.jsconf.cl/p/${index}`}
-                  className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
-                  target="_blank"
-                  title="Share on Twitter"
-                  rel="noreferrer"
-                >
-                  <Twitter className="h-5 w-5" />
-                </a>
-                <button
-                  onClick={() =>
-                    downloadPhoto(
-                      `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}/w=10000,format=png`,
-                      `${index}.png`
-                    )
-                  }
-                  className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
-                  title="Download fullsize version"
-                >
-                  <ArrowDownTrayIcon className="h-5 w-5" />
-                </button>
-              </div>
-              <div className="absolute top-0 left-0 flex items-center gap-2 p-3 text-white">
-                <button
-                  onClick={closeModal}
-                  className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
-                >
-                  {navigation ? (
-                    <XMarkIcon className="h-5 w-5" />
-                  ) : (
-                    <ArrowUturnLeftIcon className="h-5 w-5" />
-                  )}
-                </button>
-              </div>
-            </div>
-          )}
-          {/* Bottom Nav bar */}
-          {navigation && (
-            <div className="fixed inset-x-0 bottom-0 z-40 overflow-hidden bg-gradient-to-b from-black/0 to-black/60">
-              <motion.div
-                initial={false}
-                className="mx-auto mt-6 mb-6 flex aspect-[3/2] h-14"
-              >
-                <AnimatePresence initial={false}>
-                  {filteredImages.map(({ index: id }) => (
+      <AnimatePresence initial={true}>
+        {loaded && navigation && (
+          <motion.div
+            animate={{ opacity: 1, scale: 1 }}
+            initial={{
+              opacity: 0,
+              scale: 0.9,
+            }}
+            exit={{ opacity: 0 }}
+            id="NAVIGATION2"
+            className="fixed inset-x-0 bottom-0 z-40 overflow-hidden bg-gradient-to-b from-black/0 to-black/60"
+          >
+            <motion.div
+              initial={false}
+              className="mx-auto mt-6 mb-6 flex aspect-[3/2] h-14"
+            >
+              <AnimatePresence initial={false}>
+                {filteredImages.map((filteredImage) => {
+                  return (
                     <motion.button
                       initial={{
                         width: "0%",
                         x: `${Math.max((index - 1) * -100, 15 * -100)}%`,
                       }}
                       animate={{
-                        scale: id === index ? 1.25 : 1,
+                        scale: filteredImage.index === index ? 1.25 : 1,
                         width: "100%",
                         x: `${Math.max(index * -100, 15 * -100)}%`,
                       }}
                       exit={{ width: "0%" }}
-                      onClick={() => changePhotoId(id)}
-                      key={id}
+                      // onHoverStart={() => {
+                      //   const img = new Image();
+                      //   img.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${filteredImage.id}`;
+                      // }}
+                      onClick={() => changePhotoId(filteredImage.index)}
+                      key={filteredImage.index}
                       className={`${
-                        id === index
+                        filteredImage.index === index
                           ? "z-20 rounded-md shadow shadow-black/50"
                           : "z-10"
-                      } ${id === 0 ? "rounded-l-md" : ""} ${
-                        id === images.length - 1 ? "rounded-r-md" : ""
+                      } ${filteredImage.index === 0 ? "rounded-l-md" : ""} ${
+                        filteredImage.index === images.length - 1
+                          ? "rounded-r-md"
+                          : ""
                       } relative inline-block w-full shrink-0 transform-gpu overflow-hidden focus:outline-none`}
                     >
                       <NextImage
@@ -208,20 +250,20 @@ export default function SharedModal({
                         width={180}
                         height={120}
                         className={`${
-                          id === index
+                          filteredImage.index === index
                             ? "brightness-110 hover:brightness-110"
                             : "brightness-50 contrast-125 hover:brightness-75"
                         } h-full transform object-cover transition`}
-                        src={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}`}
+                        src={`/${filteredImage.id}`}
                       />
                     </motion.button>
-                  ))}
-                </AnimatePresence>
-              </motion.div>
-            </div>
-          )}
-        </div>
-      </div>
+                  );
+                })}
+              </AnimatePresence>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </MotionConfig>
   );
 }

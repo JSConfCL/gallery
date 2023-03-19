@@ -106,35 +106,66 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           })}
         </div>
       </main>
-      <footer className="p-6 text-center text-white/80 sm:p-12">
-        Gracias a{" "}
-        <a
-          href="https://santoremedio.cl/"
-          target="_blank"
-          className="font-semibold hover:text-white"
-          rel="noreferrer"
-        >
-          Santo Remedio
-        </a>
-        ,{" "}
-        <a
-          href="https://jsconf.cl/"
-          target="_blank"
-          className="font-semibold hover:text-white"
-          rel="noreferrer"
-        >
-          Corporación JavaScript Chile
-        </a>
-        , y{" "}
-        <a
-          href="http://jsconf.cl/"
-          target="_blank"
-          className="font-semibold hover:text-white"
-          rel="noreferrer"
-        >
-          la comunidad 💛
-        </a>{" "}
-        por sus fotos y media.
+      <footer className="flex flex-col gap-2 p-7 text-center text-white/80 sm:p-12">
+        <div>
+          Gracias a{" "}
+          <a
+            href="https://santoremedio.cl/"
+            target="_blank"
+            className="font-bold hover:text-white"
+            rel="noreferrer"
+          >
+            Santo Remedio
+          </a>
+          ,{" "}
+          <a
+            href="https://jsconf.cl/"
+            target="_blank"
+            className="font-bold hover:text-white"
+            rel="noreferrer"
+          >
+            Corporación JavaScript Chile
+          </a>
+          , y a la comunidad 💛 por sus fotos y media.
+        </div>
+        <div>
+          Siguennos en{" "}
+          <a
+            href="https://www.linkedin.com/company/jsconf-chile"
+            target="_blank"
+            className="font-bold hover:text-white"
+            rel="noreferrer"
+          >
+            Linkedin
+          </a>
+          ,{" "}
+          <a
+            href="https://twitter.com/jsconfcl"
+            target="_blank"
+            className="font-bold hover:text-white"
+            rel="noreferrer"
+          >
+            Twitter
+          </a>
+          ,{" "}
+          <a
+            href="https://www.instagram.com/jsconf.cl/"
+            target="_blank"
+            className="font-bold hover:text-white"
+            rel="noreferrer"
+          >
+            Instagram
+          </a>
+          , y{" "}
+          <a
+            href="https://www.facebook.com/jsconfcl"
+            target="_blank"
+            className="font-bold hover:text-white"
+            rel="noreferrer"
+          >
+            Facebook
+          </a>
+        </div>
       </footer>
     </>
   );
