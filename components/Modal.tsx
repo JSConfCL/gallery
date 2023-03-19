@@ -1,13 +1,15 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { AnimatePresence, motion, } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { Fragment, useRef, useState } from "react";
 import useKeypress from "react-use-keypress";
 import type { ImageProps } from "../utils/types";
 import SharedModal from "./SharedModal";
 
-
-const InternalModal = ({ images, handleClose }: {
+const InternalModal = ({
+  images,
+  handleClose,
+}: {
   images: ImageProps[];
   handleClose: () => void;
 }) => {
@@ -18,7 +20,6 @@ const InternalModal = ({ images, handleClose }: {
 
   const [direction, setDirection] = useState(0);
   const [curIndex, setCurIndex] = useState(index);
-
 
   function changePhotoId(newVal: number) {
     if (newVal > index) {
@@ -47,15 +48,17 @@ const InternalModal = ({ images, handleClose }: {
       changePhotoId(index - 1);
     }
   });
-  return <SharedModal
-    index={curIndex}
-    direction={direction}
-    images={images}
-    changePhotoId={changePhotoId}
-    closeModal={handleClose}
-    navigation={true}
-  />
-}
+  return (
+    <SharedModal
+      index={curIndex}
+      direction={direction}
+      images={images}
+      changePhotoId={changePhotoId}
+      closeModal={handleClose}
+      navigation={true}
+    />
+  );
+};
 export default function Modal({
   images,
   isOpen,
@@ -73,14 +76,11 @@ export default function Modal({
   }
 
   return (
-    <Transition
-      show={isOpen}
-      as={Fragment}
-    >
+    <Transition show={isOpen} as={Fragment}>
       <Dialog
         onClose={handleClose}
         initialFocus={overlayRef}
-        className="fixed inset-0 z-10 flex items-center justify-center"
+        className="fixed inset-0 z-10"
       >
         <Transition.Child
           as={Fragment}
@@ -91,7 +91,7 @@ export default function Modal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 z-30 bg-black/70 backdrop-blur-2xl" />
+          <div className="fixed inset-0 z-10 bg-black/70 backdrop-blur-2xl" />
         </Transition.Child>
         <Transition.Child
           as={Fragment}
@@ -102,14 +102,10 @@ export default function Modal({
           leaveFrom="opacity-100 scale-100"
           leaveTo="opacity-0 scale-95"
         >
-          <Dialog.Panel className='relative z-50 flex aspect-[3/2] w-full max-w-7xl items-center wide:h-full xl:taller-than-854:h-auto'>
-            <InternalModal
-              images={images}
-              handleClose={handleClose}
-            />
+          <Dialog.Panel className="fixed inset-0 z-20">
+            <InternalModal images={images} handleClose={handleClose} />
           </Dialog.Panel>
         </Transition.Child>
-
       </Dialog>
     </Transition>
   );
