@@ -7,21 +7,18 @@ class MyDocument extends Document {
         <Head>
           <link rel="icon" href="/favicon.ico" />
           <meta property="og:type" content="website" />
-          <meta
-            name="description"
-            content="Ve las fotos de la JSConf Chile 2023."
-          />
           <meta property="og:site_name" content="https://gallery.jsconf.cl" />
           <meta
             property="og:description"
-            content="Ve las fotos de la JSConf Chile 2023."
+            content="Explora las mejores fotos de la exitosa Conferencia de JavaScript en Chile de febrero de 2023 y revive los momentos más emocionantes de este evento de tecnología de vanguardia."
           />
           <meta property="og:title" content="JSConf Chile 2023 Photos" />
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content="JSConf Chile 2023 Photos" />
+
           <meta
             name="twitter:description"
-            content="Ve las fotos de la JSConf Chile 2023."
+            content="Revive la JSConf Chile 2023!"
           />
         </Head>
         <body className="bg-black antialiased">
