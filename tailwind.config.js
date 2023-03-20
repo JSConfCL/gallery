@@ -10,6 +10,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        'jsconf-yellow': '#F0E040'
+      },
+      fontFamily: {
+        koulen: ["Koulen", "cursive"],
+      },
       boxShadow: {
         highlight: 'inset 0 0 0 1px rgba(255, 255, 255, 0.05)',
       },
