@@ -30,7 +30,9 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
     <>
       <Head>
         <title>Fotos de la JSConf Chile 2023</title>
+        <meta name="author" content="JSConf Chile" />
         <meta
+          name="image"
           property="og:image"
           content={
             process.env.NEXT_PUBLIC_PHOTOS_HOST +
