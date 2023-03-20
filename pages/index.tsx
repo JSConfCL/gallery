@@ -49,18 +49,18 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           }}
         />
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4">
-          <div className="after:content relative mb-5 flex h-[629px] flex-col items-center justify-end gap-4 overflow-hidden rounded-lg bg-white/10 px-6 pb-16 text-center text-white shadow-highlight after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight lg:pt-0">
+          <div className="after:content relative mb-5 flex h-[629px] flex-col items-center justify-end gap-4 overflow-hidden rounded-lg bg-jsconf-yellow px-6 pb-16 text-center text-white shadow-highlight after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight lg:pt-0">
             <div className="absolute inset-0 z-0 flex items-center justify-center opacity-20">
               <span className="flex max-h-full max-w-full items-center justify-center">
                 {/* <Bridge /> */}
               </span>
               <span className="absolute left-0 right-0 bottom-0 h-[400px] bg-gradient-to-b from-black/0 via-black to-black"></span>
             </div>
-            <Logo />
-            <h1 className="mt-8 mb-4 text-base font-bold uppercase tracking-widest">
+            <Logo color="#000" />
+            <h1 className="mt-8 mb-4 text-black font-bold uppercase tracking-widest font-koulen">
               JSConf CHILE 2023
             </h1>
-            <p className="z-10 max-w-[40ch] text-white/75 sm:max-w-[32ch]">
+            <p className="z-10 max-w-[40ch] text-black/80 sm:max-w-[32ch]">
               Revive la primera conferencia de JavaScript de Chile! Tienes fotos
               que quieras agregar?{" "}
               <a className="font-bold" href="mailto:contacto@jsconf.cl">
@@ -68,7 +68,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
               </a>
             </p>
             <a
-              className="pointer z-10 mt-6 rounded-lg border border-white bg-white px-3 py-2 text-sm font-semibold text-black transition hover:bg-white/10 hover:text-white md:mt-4"
+              className="pointer z-10 mt-6 rounded-lg border border-black bg-black px-3 py-2 text-sm font-semibold text-white transition hover:bg-white/10 hover:text-white md:mt-4 bg-black"
               href="https://github.com/JSConfCL/2023_images"
               target="_blank"
               rel="noreferrer"
@@ -115,7 +115,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           <a
             href="https://santoremedio.cl/"
             target="_blank"
-            className="font-bold hover:text-white"
+            className="font-bold text-jsconf-yellow hover:text-white font-koulen"
             rel="noreferrer"
           >
             Santo Remedio
@@ -124,7 +124,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           <a
             href="https://jsconf.cl/"
             target="_blank"
-            className="font-bold hover:text-white"
+            className="font-bold text-jsconf-yellow hover:text-white font-koulen"
             rel="noreferrer"
           >
             Corporación JavaScript Chile
@@ -136,7 +136,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           <a
             href="https://www.linkedin.com/company/jsconf-chile"
             target="_blank"
-            className="font-bold hover:text-white"
+            className="font-bold text-jsconf-yellow hover:text-white font-koulen"
             rel="noreferrer"
           >
             Linkedin
@@ -145,7 +145,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           <a
             href="https://twitter.com/jsconfcl"
             target="_blank"
-            className="font-bold hover:text-white"
+            className="font-bold text-jsconf-yellow hover:text-white font-koulen"
             rel="noreferrer"
           >
             Twitter
@@ -154,7 +154,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           <a
             href="https://www.instagram.com/jsconf.cl/"
             target="_blank"
-            className="font-bold hover:text-white"
+            className="font-bold text-jsconf-yellow hover:text-white font-koulen"
             rel="noreferrer"
           >
             Instagram
@@ -163,12 +163,24 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           <a
             href="https://www.facebook.com/jsconfcl"
             target="_blank"
-            className="font-bold hover:text-white"
+            className="font-bold text-jsconf-yellow hover:text-white font-koulen"
             rel="noreferrer"
           >
             Facebook
           </a>
         </div>
+        <div>
+          Esta galería es un fork de {" "}
+          <a
+            href="https://nextjsconf-pics.vercel.app/"
+            target="_blank"
+            className="font-bold text-jsconf-yellow hover:text-white font-koulen"
+            rel="noreferrer"
+          >
+            NEXT.js CONF Gallery
+          </a>
+        </div>
+
       </footer>
     </>
   );
