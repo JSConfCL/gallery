@@ -129,7 +129,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           , y a la comunidad 💛 por sus fotos y media.
         </div>
         <div>
-          Siguennos en{" "}
+          Síguenos en{" "}
           <a
             href="https://www.linkedin.com/company/jsconf-chile"
             target="_blank"
