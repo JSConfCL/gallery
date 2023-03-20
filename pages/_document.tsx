@@ -6,6 +6,7 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <link rel="icon" href="/favicon.ico" />
+          <meta property="og:type" content="website" />
           <meta
             name="description"
             content="Ve las fotos de la JSConf Chile 2023."
