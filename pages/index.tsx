@@ -29,12 +29,12 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
   return (
     <>
       <Head>
-        <title>JSConf Chile 2023 Photos</title>
+        <title>Fotos de la JSConf Chile 2023</title>
         <meta
           property="og:image"
           content={
             process.env.NEXT_PUBLIC_PHOTOS_HOST +
-            "/69ae16b6-4cc0-4701-411c-4e06daec1400"
+            "/69ae16b6-4cc0-4701-411c-4e06daec1400/w=1920,fit=cover"
           }
         />
       </Head>
