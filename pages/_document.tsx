@@ -7,10 +7,7 @@ class MyDocument extends Document {
         <Head>
           <link rel="icon" href="/favicon.ico" />
           <meta name="description" content="See pictures from JSConf Chile." />
-          <meta
-            property="og:site_name"
-            content="https://gallery.jsconf.cl/app"
-          />
+          <meta property="og:site_name" content="https://gallery.jsconf.cl" />
           <meta
             property="og:description"
             content="See pictures from JSConf Chile."

@@ -33,7 +33,8 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
         <meta
           property="og:image"
           content={
-            process.env.PHOTOS_HOST + "/69ae16b6-4cc0-4701-411c-4e06daec1400"
+            process.env.NEXT_PUBLIC_PHOTOS_HOST +
+            "/69ae16b6-4cc0-4701-411c-4e06daec1400"
           }
         />
       </Head>
