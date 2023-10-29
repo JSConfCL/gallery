@@ -102,7 +102,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
                   sizes="(max-width: 640px) 25w,
                   (max-width: 1280px) 33w,
                   (max-width: 1536px) 100w,
-                  25vw"
+                  35w"
                 />
               </Link>
             );
@@ -188,33 +188,12 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
 
 export default Home;
 
-// export async function getServerSideProps() {
-//   let results = await getResults();
-//   const limit = results.length;
-//   const blurImagePromises = results
-//     .filter((e, index) => index < limit)
-//     .map((image) => {
-//       return getBase64ImageUrl(image);
-//     });
-//   const imagesWithBlurDataUrls = await Promise.all(blurImagePromises);
-//   for (let index = 0; index < limit; index++) {
-//     results[index].blurDataUrl = imagesWithBlurDataUrls[index];
-//   }
-//   return {
-//     props: {
-//       images: results,
-//     },
-//   };
-// }
-
 export async function getStaticProps() {
   let results = await getResults();
   const limit = results.length;
   const blurImagePromises = results
     .filter((e, index) => index < limit)
-    .map((image) => {
-      return getBase64ImageUrl(image);
-    });
+    .map(getBase64ImageUrl);
   const imagesWithBlurDataUrls = await Promise.all(blurImagePromises);
   for (let index = 0; index < limit; index++) {
     results[index].blurDataUrl = imagesWithBlurDataUrls[index];
