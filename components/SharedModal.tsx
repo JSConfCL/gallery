@@ -28,7 +28,7 @@ export default function SharedModal({
   const [loaded, setLoaded] = useState(false);
 
   let filteredImages = images?.filter((img: ImageProps) =>
-    range(index - 15, index + 15).includes(img.index)
+    range(index - 15, index + 15).includes(img.index),
   );
 
   const handlers = useSwipeable({
@@ -170,7 +170,7 @@ export default function SharedModal({
                       onClick={() =>
                         downloadPhoto(
                           `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}/w=10000,format=png`,
-                          `${index}.png`
+                          `${index}.png`,
                         )
                       }
                       className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"

@@ -19,7 +19,7 @@ export default function Strip({
   const index = Number(photoId);
 
   let filteredImages = images?.filter((img: ImageProps) =>
-    range(index - 15, index + 15).includes(img.index)
+    range(index - 15, index + 15).includes(img.index),
   );
 
   // const handlers = useSwipeable({

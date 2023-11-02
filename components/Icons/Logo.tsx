@@ -1,12 +1,18 @@
 interface LogoProps {
   color?: string;
+  width?: number;
+  height?: number;
 }
 
-export default function Logo({ color = "#fff" }: LogoProps) {
+export default function Logo({
+  color = "#fff",
+  width = 150,
+  height = 150,
+}: LogoProps) {
   return (
     <svg
-      width="150"
-      height="150"
+      width={width}
+      height={height}
       viewBox="0 0 150 150"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

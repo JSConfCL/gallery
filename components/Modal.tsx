@@ -33,7 +33,7 @@ const InternalModal = ({
         query: { photoId: newVal },
       },
       `/p/${newVal}`,
-      { shallow: true }
+      { shallow: true },
     );
   }
 

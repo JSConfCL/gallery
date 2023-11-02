@@ -1,10 +1,10 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import Carousel from "../../components/Carousel";
-import getResults from "../../utils/cachedImages";
-import getBase64ImageUrl from "../../utils/generateBlurPlaceholder";
-import type { ImageProps } from "../../utils/types";
+import Carousel from "../../../components/Carousel";
+import getResults from "../../../utils/cachedImages";
+import getBase64ImageUrl from "../../../utils/generateBlurPlaceholder";
+import type { ImageProps } from "../../../utils/types";
 
 const Home: NextPage = ({ currentPhoto }: { currentPhoto: ImageProps }) => {
   const router = useRouter();
@@ -32,7 +32,7 @@ export default Home;
 export const getStaticProps: GetStaticProps = async (context) => {
   const results = await getResults();
   const result = results.find(
-    (el, index) => index === Number(context.params.photoId)
+    (el, index) => index === Number(context.params.photoId),
   );
 
   let currentPhoto = result;

@@ -170,7 +170,7 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
           </a>
         </div>
         <div>
-          Esta galería es un fork de {" "}
+          Esta galería es un fork de{" "}
           <a
             href="https://nextjsconf-pics.vercel.app/"
             target="_blank"
@@ -180,7 +180,6 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
             NEXT.js CONF Gallery
           </a>
         </div>
-
       </footer>
     </>
   );
@@ -189,18 +188,18 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
 export default Home;
 
 export async function getStaticProps() {
-  let results = await getResults();
-  const limit = results.length;
-  const blurImagePromises = results
-    .filter((e, index) => index < limit)
-    .map(getBase64ImageUrl);
-  const imagesWithBlurDataUrls = await Promise.all(blurImagePromises);
-  for (let index = 0; index < limit; index++) {
-    results[index].blurDataUrl = imagesWithBlurDataUrls[index];
-  }
-  return {
-    props: {
-      images: results,
-    },
-  };
+  // let results = await getResults();
+  // const limit = results.length;
+  // const blurImagePromises = results
+  //   .filter((e, index) => index < limit)
+  //   .map(getBase64ImageUrl);
+  // const imagesWithBlurDataUrls = await Promise.all(blurImagePromises);
+  // for (let index = 0; index < limit; index++) {
+  //   results[index].blurDataUrl = imagesWithBlurDataUrls[index];
+  // }
+  // return {
+  //   props: {
+  //     images: results,
+  //   },
+  // };
 }
