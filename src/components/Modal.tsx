@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { Fragment, useRef, useState } from "react";
 import useKeypress from "react-use-keypress";
-import type { ImageProps } from "../utils/types";
+import type { ImageProps } from "../../utils/types";
 import SharedModal from "./SharedModal";
 
 const InternalModal = ({

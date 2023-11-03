@@ -1,17 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "../components/Icons/Logo";
-import { Button } from "../components/ui/button";
+import Logo from "../src/components/Icons/Logo";
+import { Button } from "../src/components/ui/button";
+import { API } from "../src/gql/api";
+import { urlForImage } from "../src/lib/sanity";
 
-const baseImages = Array.from({ length: 100 }, (_, i) => i + 1).map((i) => {
-  return {
-    id: i,
-    index: i,
-    blurDataUrl: "",
-  };
-});
+export default async function Page() {
+  const data = await API.allEvents();
+  const communityEvents = data?.allEventInstance ?? [];
 
-export default function Home({ images = baseImages }: { images: any[] }) {
   return (
     <main className="mx-auto max-w-[1960px] p-4">
       <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4">
@@ -40,35 +37,38 @@ export default function Home({ images = baseImages }: { images: any[] }) {
             </a>
           </Button>
         </div>
-        {images.map(({ id, index, blurDataUrl }) => {
-          return (
-            <Link
-              key={id}
-              href={`/?photoId=${index}`}
-              as={`/p/${index}`}
-              shallow
-              className="after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
-            >
-              <Image
-                // loader={imageLoader}
-                alt="Next.js Conf photo"
-                className="transform rounded-lg brightness-90 transition will-change-auto group-hover:brightness-110"
-                style={{ transform: "translate3d(0, 0, 0)" }}
-                // placeholder="blur"
-                // blurDataURL={blurDataUrl}
-                id={id}
-                // Load cat-api images from the web
-                src={`https://cataas.com/cat?${id}`}
-                width={720}
-                height={480}
-                //   sizes="(max-width: 640px) 25w,
-                // (max-width: 1280px) 33w,
-                // (max-width: 1536px) 100w,
-                // 35w"
-              />
-            </Link>
-          );
-        })}
+        {communityEvents.map(
+          ({ _id, image, mergedTitle, title, eventType }) => {
+            console.log({ _id, image, mergedTitle, title, eventType });
+            return (
+              <Link
+                key={_id}
+                href={`/?photoId=${_id}`}
+                as={`/p/${_id}`}
+                shallow
+                className="after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
+              >
+                <Image
+                  // loader={imageLoader}
+                  alt="Next.js Conf photo"
+                  className="transform rounded-lg brightness-90 transition will-change-auto group-hover:brightness-110"
+                  style={{ transform: "translate3d(0, 0, 0)" }}
+                  // placeholder="blur"
+                  // blurDataURL={blurDataUrl}
+                  id={_id}
+                  // Load cat-api images from the web
+                  src={urlForImage(eventType.image).url()}
+                  width={720}
+                  height={480}
+                  //   sizes="(max-width: 640px) 25w,
+                  // (max-width: 1280px) 33w,
+                  // (max-width: 1536px) 100w,
+                  // 35w"
+                />
+              </Link>
+            );
+          },
+        )}
       </div>
     </main>
   );

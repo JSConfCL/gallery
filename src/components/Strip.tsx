@@ -2,8 +2,8 @@ import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import NextImage from "next/image";
 import { useEffect, useState } from "react";
 import { useSwipeable } from "react-swipeable";
-import { range } from "../utils/range";
-import type { ImageProps, SharedModalProps } from "../utils/types";
+import { range } from "../../utils/range";
+import type { ImageProps, SharedModalProps } from "../../utils/types";
 import { useRouter } from "next/router";
 
 export default function Strip({
