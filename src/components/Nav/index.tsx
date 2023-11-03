@@ -1,6 +1,7 @@
 import React from "react";
 import Logo from "../Icons/Logo";
 import { Input } from "../ui/input";
+import { AuthBlock } from "./AuthBlock";
 
 export const Nav = () => {
   return (
@@ -11,7 +12,7 @@ export const Nav = () => {
       <div className="flex flex-1 justify-center items-center">
         <Input placeholder="Busca tu evento" className="max-w-lg" />
       </div>
-      <div>{/* TODO: AUTH */}</div>
+      <AuthBlock />
     </div>
   );
 };
