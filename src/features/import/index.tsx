@@ -1,21 +1,26 @@
 "use client";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { Importer, TOKEN_KEY } from "./importer";
+import { Importer } from "./importer";
 import { Suspense, useEffect, useState } from "react";
 import { ErrorBoundary } from "./errorBoundary";
 import { useRouter } from "next/navigation";
-import { useAuth, useUser } from "@clerk/clerk-react";
+import { useAuth } from "@clerk/clerk-react";
+import { AllEventsQuery } from "../../gql/graphql";
 
 const useGetClient = (token: string) => {
   return new ApolloClient({
-    uri: "https://api.jsconf.dev/graphql",
+    uri: process.env.NEXT_PUBLIC_JSCL_API_URL,
     cache: new InMemoryCache(),
     headers: {
       authorization: `Bearer ${token}`,
     },
   });
 };
-export const Import = () => {
+export const Import = ({
+  communityEvents,
+}: {
+  communityEvents: AllEventsQuery["allEventInstance"];
+}) => {
   const { getToken } = useAuth();
   const [token, setToken] = useState("");
   const router = useRouter();
@@ -46,7 +51,7 @@ export const Import = () => {
             router.push("/", {});
           }}
         >
-          <Importer />
+          <Importer communityEvents={communityEvents} />
         </ErrorBoundary>
       </Suspense>
     </ApolloProvider>

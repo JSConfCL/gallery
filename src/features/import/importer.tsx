@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Separator } from "../../components/ui/separator";
@@ -10,9 +10,16 @@ import {
   CardFooter,
   CardHeader,
 } from "../../components/ui/card";
-import { CheckCircle, ExternalLink } from "lucide-react";
+import { CheckCircle, ExternalLink, LoaderIcon } from "lucide-react";
 import { cx } from "class-variance-authority";
-import { useIsSuperAdminSuspenseQuery } from "../../gql/jschileAPI";
+import { useToast } from "@/components/ui/use-toast";
+import {
+  useImportGoogleAlbumMutation,
+  useIsSuperAdminSuspenseQuery,
+} from "../../gql/jschileAPI";
+import { AllEventsQuery } from "../../gql/graphql";
+import { urlForImage } from "../../lib/sanity";
+import { Skeleton } from "../../components/ui/skeleton";
 
 export const TOKEN_KEY = "jscl-import-token";
 
@@ -34,8 +41,14 @@ const fetchWrapper = (input: RequestInfo, init: RequestInit = {}) => {
 const useGetAlbums = () => () =>
   fetchWrapper("https://photoslibrary.googleapis.com/v1/albums");
 
-export const Importer = () => {
+export const Importer = ({
+  communityEvents,
+}: {
+  communityEvents: AllEventsQuery["allEventInstance"];
+}) => {
   const isSuperAdminQuery = useIsSuperAdminSuspenseQuery();
+
+  const [hiddenToken, setHiddenToken] = useState("");
   const [token, setToken] = useState("");
   const [defaultAlbums, setDefaultAlbums] = useState<
     {
@@ -46,19 +59,77 @@ export const Importer = () => {
       photo: string;
     }[]
   >([]);
-  const [selectedAlbums, setSelectedAlbums] = useState(new Set<string>());
-  const [info, setInfo] = useState(null);
+  const [selectedAlbum, setSelectedAlbum] = useState("");
+  const [selectedSanityEvent, setSelectedSanityEvent] = useState("");
   const [loading, setLoading] = useState(false);
   const getAlbums = useGetAlbums();
+  const { toast } = useToast();
+  const [importGoogleAlbumMutation, importGoogleAlbumMutationResults] =
+    useImportGoogleAlbumMutation({
+      onCompleted: () => {
+        toast({
+          title: "Tamos ready 🫰",
+          description: "Las fotos se han encolado para importar",
+        });
+        setSelectedAlbum("");
+        setSelectedSanityEvent("");
+      },
+      onError: () => {
+        toast({
+          title: "Error",
+          description: "No pudimos importar las fotos.",
+          variant: "destructive",
+        });
+      },
+    });
+
+  const loadAlbums = async () => {
+    if (loading) {
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await getAlbums();
+      const albumsToShow = response.albums.map((album) => {
+        return {
+          id: album.id,
+          title: album.title,
+          items: album.mediaItemsCount,
+          albumURL: album.productUrl,
+          photo: album.coverPhotoBaseUrl,
+        };
+      });
+      setDefaultAlbums(albumsToShow);
+      toast({
+        title: "Nice!",
+        description: "Abumes listos.",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "No pudimos cargar los albumes de Google Photos.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (hiddenToken) {
+      loadAlbums();
+    }
+  }, [hiddenToken]);
   console.log({ isSuperAdminQuery });
   // if (!isSuperAdminQuery.data?.me.isSuperAdmin) {
   //   throw new Error("No eres super admin");
   // }
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-6">
-        <h1 className="text-3xl">Google Image Importer</h1>
-        <p>
+    <div className="flex flex-col gap-8 pb-[30vh]">
+      <div className="flex flex-col gap-10">
+        <h1 className="text-[3rem]">Google Image Importer</h1>
+        <p className="text-2xl">
           1. Abre{" "}
           <Link
             href="https://auth-tokens.jschile.org/auth/google"
@@ -67,7 +138,8 @@ export const Importer = () => {
           >
             <Button variant="secondary">este link</Button>
           </Link>{" "}
-          y copia el token en el siguiente input, y haz click en "Guardar".
+          (Con tu cuenta JSConf) y copia el token en el siguiente input. Luego
+          haz click en "Guardar".
         </p>
         <div className="flex flex-row gap-4">
           <Input
@@ -78,105 +150,172 @@ export const Importer = () => {
           <Button
             onClick={async () => {
               window.localStorage.setItem(TOKEN_KEY, token);
+              setHiddenToken(token);
               setToken("");
+              toast({
+                title: "Token Guardado",
+                description: "Tu token ha sido guardado correctamente.",
+              });
             }}
           >
             Guardar
           </Button>
         </div>
       </div>
-      <Separator />
-      <div className="flex flex-col gap-4">
-        <p>2. Has Click en el boton "Cargar Albumes"</p>
-        <div>
-          <Button
-            onClick={async () => {
-              try {
-                setLoading(true);
-                const response = await getAlbums();
-                const albumsToShow = response.albums.map((album) => {
-                  return {
-                    id: album.id,
-                    title: album.title,
-                    items: album.mediaItemsCount,
-                    albumURL: album.productUrl,
-                    photo: album.coverPhotoBaseUrl,
-                  };
-                });
-                setDefaultAlbums(albumsToShow);
-              } catch (error) {
-                console.error(error);
-              } finally {
-                setLoading(false);
-              }
-            }}
+      {hiddenToken && (
+        <>
+          <Separator />
+          <div
+            className={cx("flex flex-col gap-4", {
+              hidden: !hiddenToken,
+            })}
           >
-            Cargar Albumes
-          </Button>
-        </div>
-      </div>
-      <Separator />
-      <div className="flex flex-col gap-4">
-        <p>3. Selecciona los albumes que quieras importar</p>
-        {defaultAlbums.length > 0 && (
-          <h2 className="text-xl">
-            Albumes de Google photos{" "}
-            {selectedAlbums.size ? `(${selectedAlbums.size})` : ""}
-          </h2>
-        )}
-        <div className="flex flex-row gap-4">
-          {defaultAlbums.map((album) => (
-            <Card key={album.id} className="w-80 h-full">
-              <CardHeader className="text-bold">{album.title}</CardHeader>
-              <CardContent className="flex flex-col gap-4">
-                <img src={album.photo} className="w-full h-52 object-cover" />
-                <div>
-                  <Button
-                    variant={
-                      selectedAlbums.has(album.id) ? "outline" : "default"
-                    }
-                    size="sm"
-                    onClick={() =>
-                      setSelectedAlbums((prev) => {
-                        const newSet = new Set(prev);
-                        if (newSet.has(album.id)) {
-                          newSet.delete(album.id);
-                        } else {
-                          newSet.add(album.id);
+            <p className="text-2xl">
+              2. Selecciona el album de google que quieras importar{" "}
+            </p>
+            <div>
+              <Button size="sm" onClick={loadAlbums}>
+                {loading ? (
+                  <LoaderIcon className="animate-spin" />
+                ) : (
+                  "Re-Cargar Albumes"
+                )}
+              </Button>
+            </div>
+            {defaultAlbums.length > 0 && (
+              <h2 className="text-xl">Albumes de Google photos</h2>
+            )}
+            <div className="flex flex-row gap-4 flex-wrap">
+              {loading && (
+                <>
+                  <Skeleton className="w-80 h-96" />
+                  <Skeleton className="w-80 h-96" />
+                  <Skeleton className="w-80 h-96" />
+                  <Skeleton className="w-80 h-96" />
+                </>
+              )}
+              {defaultAlbums.map((album) => (
+                <Card key={album.id} className="w-80 h-96">
+                  <CardHeader className="text-bold">{album.title}</CardHeader>
+                  <CardContent className="flex flex-col gap-4">
+                    <img
+                      src={album.photo}
+                      className="w-full h-52 object-cover"
+                    />
+                    <div>
+                      <Button
+                        variant={
+                          selectedAlbum === album.id ? "outline" : "default"
                         }
-                        return newSet;
-                      })
-                    }
-                  >
-                    {selectedAlbums.has(album.id) ? (
-                      <>
-                        Seleccionado <CheckCircle size="14" className="ml-2" />{" "}
-                      </>
-                    ) : (
-                      "Seleccionar"
-                    )}
-                  </Button>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Link passHref href={album.albumURL} target="_blank">
-                  <Button variant="link" className="px-0">
-                    Ver Album en google photos{" "}
-                    <ExternalLink size={16} className="ml-2" />
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </div>
-      <div className="flex flex-col gap-4">
-        <div>
-          <Button disabled={!token || !selectedAlbums.size} variant="default">
-            Importar
-          </Button>
-        </div>
-      </div>
+                        size="sm"
+                        onClick={() => setSelectedAlbum(album.id)}
+                      >
+                        {selectedAlbum === album.id ? (
+                          <>
+                            Seleccionado{" "}
+                            <CheckCircle size="14" className="ml-2" />{" "}
+                          </>
+                        ) : (
+                          "Seleccionar"
+                        )}
+                      </Button>
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Link passHref href={album.albumURL} target="_blank">
+                      <Button variant="link" className="px-0">
+                        Ver Album en google photos{" "}
+                        <ExternalLink size={16} className="ml-2" />
+                      </Button>
+                    </Link>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col gap-4">
+            <p className="text-2xl">
+              3. Selecciona el evento de sanity donde se importarán estas fotos
+            </p>
+            {defaultAlbums.length > 0 && (
+              <h2 className="text-xl">Eventos de Sanity</h2>
+            )}
+            <div className="flex flex-row gap-4 flex-wrap">
+              {communityEvents.map((event) => (
+                <Card key={event._id} className="w-80 h-96">
+                  <CardHeader className="text-bold">
+                    {event.eventType.title + " — " + event.title ||
+                      event.mergedTitle}
+                  </CardHeader>
+                  <CardContent className="flex flex-col gap-4">
+                    <img
+                      src={
+                        urlForImage(event?.image)?.url() ||
+                        urlForImage(event.eventType.image).url()
+                      }
+                      className="w-full h-52 object-cover"
+                    />
+                    <div>
+                      <Button
+                        variant={
+                          selectedSanityEvent === event._id
+                            ? "outline"
+                            : "default"
+                        }
+                        size="sm"
+                        onClick={() => setSelectedSanityEvent(event._id)}
+                      >
+                        {selectedSanityEvent === event._id ? (
+                          <>
+                            Seleccionado{" "}
+                            <CheckCircle size="14" className="ml-2" />{" "}
+                          </>
+                        ) : (
+                          "Seleccionar"
+                        )}
+                      </Button>
+                    </div>
+                  </CardContent>
+                  <CardFooter></CardFooter>
+                </Card>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col gap-4">
+            <p className="text-2xl">
+              4. Haz click en importar para comenzar el proceso.
+            </p>
+            <div>
+              <Button
+                disabled={
+                  !hiddenToken ||
+                  !selectedAlbum ||
+                  !selectedSanityEvent ||
+                  importGoogleAlbumMutationResults.loading
+                }
+                variant="default"
+                onClick={async () => {
+                  importGoogleAlbumMutation({
+                    variables: {
+                      input: {
+                        albumId: selectedAlbum,
+                        sanityEventInstanceId: selectedSanityEvent,
+                        token: hiddenToken,
+                      },
+                    },
+                  });
+                }}
+              >
+                {importGoogleAlbumMutationResults.loading ? (
+                  <LoaderIcon className="animate-spin" />
+                ) : (
+                  "Importar"
+                )}
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

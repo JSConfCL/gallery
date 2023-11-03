@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Logo from "../src/components/Icons/Logo";
 import { Button } from "../src/components/ui/button";
-import { API } from "../src/gql/api";
+import { API } from "../src/gql/sanityApi";
 import { urlForImage } from "../src/lib/sanity";
 
 export default async function Page() {

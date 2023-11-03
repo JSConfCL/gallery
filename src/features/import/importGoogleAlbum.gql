@@ -1,0 +1,3 @@
+mutation importGoogleAlbum($input: EnqueueGoogleAlbumImportInput!) {
+  enqueueGoogleAlbumImport(input: $input)
+}

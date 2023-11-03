@@ -3,7 +3,7 @@ import type { IGraphQLConfig } from "graphql-config";
 const projectId = "t2zgeg0i";
 const dataset = "production";
 export const sanityURL = `https://${projectId}.api.sanity.io/v1/graphql/${dataset}/default`;
-export const jsChileURL = `https://api.jsconf.dev/graphql`;
+export const jsChileURL = `https://graphql-api.jsconfcl.workers.dev/graphql`;
 export const localSchema = `./src/gql/schema.gql`;
 export const sanityDocuments = [
   "src/**/*.gql",

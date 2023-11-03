@@ -94,6 +94,12 @@ export type CreateSalaryInput = {
   yearsOfExperience: Scalars['Int']['input'];
 };
 
+export type EnqueueGoogleAlbumImportInput = {
+  albumId: Scalars['String']['input'];
+  sanityEventInstanceId: Scalars['String']['input'];
+  token: Scalars['String']['input'];
+};
+
 /** Representation of an Event (Events and Users, is what tickets are linked to) */
 export type Event = {
   address: Maybe<Scalars['String']['output']>;
@@ -193,6 +199,8 @@ export type Mutation = {
   createSalary: Salary;
   /** Edit a ticket */
   editTicket: Ticket;
+  /** Enqueue images to import */
+  enqueueGoogleAlbumImport: Scalars['Boolean']['output'];
   /** Redeem a ticket */
   redeemUserTicket: UserTicket;
   /** Kickoff the email validation flow. This flow will links an email to a user, create a company if it does not exist, and allows filling data for that email's position */
@@ -242,6 +250,11 @@ export type MutationCreateSalaryArgs = {
 
 export type MutationEditTicketArgs = {
   input: TicketEditInput;
+};
+
+
+export type MutationEnqueueGoogleAlbumImportArgs = {
+  input: EnqueueGoogleAlbumImportInput;
 };
 
 
@@ -378,6 +391,16 @@ export type Salary = {
   workMetodology: WorkMetodology;
   workRole: WorkRole;
   yearsOfExperience: Scalars['Int']['output'];
+};
+
+/** Representation of a Sanity Asset */
+export type SanityAssetRef = {
+  assetId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  originalFilename: Scalars['String']['output'];
+  path: Scalars['String']['output'];
+  size: Scalars['Int']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type SearchCompaniesInput = {
@@ -547,12 +570,50 @@ export type UserEditInput = {
   username: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ImportGoogleAlbumMutationVariables = Exact<{
+  input: EnqueueGoogleAlbumImportInput;
+}>;
+
+
+export type ImportGoogleAlbumMutation = { enqueueGoogleAlbumImport: boolean };
+
 export type IsSuperAdminQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type IsSuperAdminQuery = { me: { id: string, isSuperAdmin: boolean | null } };
 
 
+export const ImportGoogleAlbumDocument = gql`
+    mutation importGoogleAlbum($input: EnqueueGoogleAlbumImportInput!) {
+  enqueueGoogleAlbumImport(input: $input)
+}
+    `;
+export type ImportGoogleAlbumMutationFn = Apollo.MutationFunction<ImportGoogleAlbumMutation, ImportGoogleAlbumMutationVariables>;
+
+/**
+ * __useImportGoogleAlbumMutation__
+ *
+ * To run a mutation, you first call `useImportGoogleAlbumMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useImportGoogleAlbumMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [importGoogleAlbumMutation, { data, loading, error }] = useImportGoogleAlbumMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useImportGoogleAlbumMutation(baseOptions?: Apollo.MutationHookOptions<ImportGoogleAlbumMutation, ImportGoogleAlbumMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ImportGoogleAlbumMutation, ImportGoogleAlbumMutationVariables>(ImportGoogleAlbumDocument, options);
+      }
+export type ImportGoogleAlbumMutationHookResult = ReturnType<typeof useImportGoogleAlbumMutation>;
+export type ImportGoogleAlbumMutationResult = Apollo.MutationResult<ImportGoogleAlbumMutation>;
+export type ImportGoogleAlbumMutationOptions = Apollo.BaseMutationOptions<ImportGoogleAlbumMutation, ImportGoogleAlbumMutationVariables>;
 export const IsSuperAdminDocument = gql`
     query isSuperAdmin {
   me {

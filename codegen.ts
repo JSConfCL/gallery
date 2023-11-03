@@ -22,7 +22,7 @@ const config = {
   ignoreNoDocuments: true,
   generates: {
     "./src/gql/": {
-      schema: [sanityURL, localSchema],
+      schema: [sanityURL],
       documents: sanityDocuments,
       preset: "client",
       config: {
