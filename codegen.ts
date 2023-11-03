@@ -1,5 +1,11 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
-import defaultConfig from "./graphql.config";
+import {
+  localSchema,
+  sanityURL,
+  jsChileURL,
+  sanityDocuments,
+  apiDocuments,
+} from "./graphql.config";
 
 const noTypeCheckingPlugin = {
   add: {
@@ -13,17 +19,17 @@ const noTypeCheckingPlugin = {
 };
 
 const config = {
-  ...defaultConfig,
   ignoreNoDocuments: true,
   generates: {
     "./src/gql/": {
+      schema: [sanityURL, localSchema],
+      documents: sanityDocuments,
       preset: "client",
       config: {
         useTypeImports: true,
         skipTypename: true,
         avoidOptionals: true,
         nonOptionalTypename: false,
-        // documentMode: "string",
         // Lamentablemente, code-gen establece "any" como predeterminado, cuando no tiene un
         // tipo para un "scalar". Esta opción nos obliga a definir un tipo cada vez que
         // queremos usar un escalar sin tipo.
@@ -35,20 +41,46 @@ const config = {
       },
     },
     "./src/gql/schema.gql": {
+      schema: [sanityURL, localSchema],
+      documents: sanityDocuments,
       plugins: ["schema-ast"],
-      // config: {
-      //   includeDirectives: true,
-      //   includeIntrospectionTypes: true,
-      //   commentDescriptions: true,
-      // },
     },
     "./src/gql/graphqlRequest.ts": {
+      schema: [sanityURL, localSchema],
+      documents: sanityDocuments,
       plugins: ["typescript-graphql-request", noTypeCheckingPlugin],
       config: {
         documentMode: "external",
         importDocumentNodeExternallyFrom: "./graphql",
         importOperationTypesFrom: "Operations",
-
+        // Esto debería reducir la cantidad de enlaces de código no deseados entre archivos,
+        // hacer que nuestros paquetes sean más pequeños y más fáciles de dividir en código
+        useTypeImports: true,
+        // Esto nos permite reutilizar los tipos de fragmentos reales en nuestras consultas, y no copiar/insertar los fragmentos.
+        inlineFragmentTypes: "combine",
+        // Lamentablemente, code-gen establece "any" como predeterminado, cuando no tiene un
+        // tipo para un "scalar". Esta opción nos obliga a definir un tipo cada vez que
+        // queremos usar un escalar sin tipo.
+        defaultScalarType: "unknown",
+        scalars: {
+          Date: "string",
+          DateTime: "string",
+        },
+      },
+    },
+    "./src/gql/jschileAPI.ts": {
+      schema: [jsChileURL],
+      documents: apiDocuments,
+      plugins: [
+        "typescript",
+        "typescript-operations",
+        "typescript-react-apollo",
+        noTypeCheckingPlugin,
+      ],
+      config: {
+        skipTypename: true,
+        avoidOptionals: true,
+        nonOptionalTypename: false,
         // Esto debería reducir la cantidad de enlaces de código no deseados entre archivos,
         // hacer que nuestros paquetes sean más pequeños y más fáciles de dividir en código
         useTypeImports: true,
