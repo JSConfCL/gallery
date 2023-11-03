@@ -10,6 +10,10 @@ query allEvents {
     image {
       asset {
         _id
+        metadata {
+          lqip
+          blurHash
+        }
         assetId
       }
     }
@@ -20,6 +24,9 @@ query allEvents {
         asset {
           _id
           assetId
+          metadata {
+            lqip
+          }
         }
       }
     }

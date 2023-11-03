@@ -21,8 +21,8 @@ export default async function Page() {
             JSConf CHILE 2023
           </h1>
           <p className="z-10 max-w-[40ch] text-black/80 sm:max-w-[32ch]">
-            Revive la primera conferencia de JavaScript de Chile! Tienes fotos
-            que quieras agregar?{" "}
+            Revive los eventos de la comunidad de JavaScript Chile! Tienes fotos
+            que quieras compartir? Envíanos un correo a{" "}
             <a className="font-bold" href="mailto:contacto@jsconf.cl">
               contacto@jsconf.cl
             </a>
@@ -37,38 +37,45 @@ export default async function Page() {
             </a>
           </Button>
         </div>
-        {communityEvents.map(
-          ({ _id, image, mergedTitle, title, eventType }) => {
-            console.log({ _id, image, mergedTitle, title, eventType });
-            return (
-              <Link
-                key={_id}
-                href={`/?photoId=${_id}`}
-                as={`/p/${_id}`}
-                shallow
-                className="after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
-              >
-                <Image
-                  // loader={imageLoader}
-                  alt="Next.js Conf photo"
-                  className="transform rounded-lg brightness-90 transition will-change-auto group-hover:brightness-110"
-                  style={{ transform: "translate3d(0, 0, 0)" }}
-                  // placeholder="blur"
-                  // blurDataURL={blurDataUrl}
-                  id={_id}
-                  // Load cat-api images from the web
-                  src={urlForImage(eventType.image).url()}
-                  width={720}
-                  height={480}
-                  //   sizes="(max-width: 640px) 25w,
-                  // (max-width: 1280px) 33w,
-                  // (max-width: 1536px) 100w,
-                  // 35w"
-                />
-              </Link>
-            );
-          },
-        )}
+        {communityEvents.map(({ _id, title, eventType }) => {
+          return (
+            <Link
+              key={_id}
+              href={`/event/${_id}`}
+              // href={`/?event=${_id}`}
+              // as={`/event/${_id}`}
+              shallow
+              className="after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
+            >
+              <div className="absolute inset-0 z-10 flex items-center justify-center ">
+                <span className="absolute left-0 z-10 right-0 bottom-0 h-[50%] opacity-40 bg-gradient-to-b from-black/0 via-black to-black"></span>
+                <div className="absolute bottom-0 z-20 left-0 right-0 flex flex-col w-fill h-[50%] items-end justify-end">
+                  <h2 className="px-4 py-3 w-fill text-white/80 flex flex-col gap">
+                    <span className="font-bold text-lg drop-shadow-md">
+                      {eventType.title}
+                    </span>
+                    <span className="font-bold drop-shadow-md">{title}</span>
+                  </h2>
+                </div>
+              </div>
+              <Image
+                alt="Javascript Chile Event"
+                className="transform rounded-lg brightness-90 z-0 transition will-change-auto group-hover:brightness-110"
+                style={{ transform: "translate3d(0, 0, 0)" }}
+                placeholder="blur"
+                blurDataURL={eventType.image.asset.metadata.lqip}
+                id={_id}
+                src={urlForImage(eventType.image).url()}
+                width={720}
+                height={480}
+                sizes="(max-width: 640px) 25w,
+                  (max-width: 1280px) 33w,
+                  (max-width: 1536px) 100w,
+                  35w"
+              />
+            </Link>
+          );
+        })}
       </div>
     </main>
   );

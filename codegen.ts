@@ -34,6 +34,14 @@ const config = {
         },
       },
     },
+    "./src/gql/schema.gql": {
+      plugins: ["schema-ast"],
+      // config: {
+      //   includeDirectives: true,
+      //   includeIntrospectionTypes: true,
+      //   commentDescriptions: true,
+      // },
+    },
     "./src/gql/graphqlRequest.ts": {
       plugins: ["typescript-graphql-request", noTypeCheckingPlugin],
       config: {

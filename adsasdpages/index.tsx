@@ -51,9 +51,6 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4">
           <div className="after:content relative mb-5 flex h-[629px] flex-col items-center justify-end gap-4 overflow-hidden rounded-lg bg-jsconf-yellow px-6 pb-16 text-center text-white shadow-highlight after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight lg:pt-0">
             <div className="absolute inset-0 z-0 flex items-center justify-center opacity-20">
-              <span className="flex max-h-full max-w-full items-center justify-center">
-                {/* <Bridge /> */}
-              </span>
               <span className="absolute left-0 right-0 bottom-0 h-[400px] bg-gradient-to-b from-black/0 via-black to-black"></span>
             </div>
             <Logo color="#000" />
@@ -88,10 +85,13 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
                 shallow
                 className="after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
               >
+                <div className="absolute inset-0 z-0 flex items-center justify-center opacity-20">
+                  <span className="absolute left-0 right-0 bottom-0 h-[400px] bg-gradient-to-b from-black/0 via-black to-black"></span>
+                </div>
                 <Image
                   loader={imageLoader}
                   alt="Next.js Conf photo"
-                  className="transform rounded-lg brightness-90 transition will-change-auto group-hover:brightness-110"
+                  className="z-0 transform rounded-lg brightness-90 transition will-change-auto group-hover:brightness-110"
                   style={{ transform: "translate3d(0, 0, 0)" }}
                   placeholder="blur"
                   blurDataURL={blurDataUrl}
