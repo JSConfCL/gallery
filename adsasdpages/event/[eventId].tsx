@@ -29,8 +29,8 @@ const Home: NextPage = ({ images }: { images: ImageProps[] }) => {
   return (
     <>
       <Head>
-        <title>Fotos de la JSConf Chile 2023</title>
-        <meta name="author" content="JSConf Chile" />
+        <title>Galería de JavaScript Chile</title>
+        <meta name="author" content="JavaScript Chile" />
         <meta
           name="image"
           property="og:image"
