@@ -17,6 +17,7 @@ import { range } from "../../utils/range";
 import type { ImageProps, SharedModalProps } from "../../utils/types";
 import Twitter from "./Icons/Twitter";
 import { urlForImage } from "../lib/sanity";
+import { EventImagesQuery } from "../gql/graphql";
 
 export default function SharedModal({
   index,
@@ -29,9 +30,13 @@ export default function SharedModal({
 }: SharedModalProps) {
   const [loaded, setLoaded] = useState(false);
 
-  let filteredImages = images?.filter((img) =>
-    range(index - 15, index + 15).includes(img),
-  );
+  // get images within 15 of the current index
+  let filteredImages = useMemo(() => {
+    return images.filter(
+      (image) =>
+        image.index >= index - 15 && image.index <= index + 15 && image,
+    );
+  }, [index]);
 
   const handlers = useSwipeable({
     onSwipedLeft: () => {
@@ -176,7 +181,11 @@ export default function SharedModal({
                   )}
                   <div className="absolute top-0 right-0 flex items-center gap-2 p-3 text-white">
                     <a
-                      href={`${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}/w=10000`}
+                      href={urlForImage(currentImage.image, {
+                        width: 4000,
+                        auto: "format",
+                        quality: 100,
+                      }).toString()}
                       className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
                       target="_blank"
                       title="Open full-size version"
@@ -193,18 +202,20 @@ export default function SharedModal({
                     >
                       <Twitter className="h-5 w-5" />
                     </a>
-                    <button
-                      onClick={() =>
-                        downloadPhoto(
-                          `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${currentImage.id}/w=10000,format=png`,
-                          `${index}.png`,
-                        )
-                      }
+                    <a
+                      href={urlForImage(currentImage.image, {
+                        width: 4000,
+                        auto: "format",
+                        quality: 100,
+                        forceDownload: true,
+                      }).toString()}
                       className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
+                      target="_blank"
                       title="Download fullsize version"
+                      rel="noreferrer"
                     >
                       <ArrowDownTrayIcon className="h-5 w-5" />
-                    </button>
+                    </a>
                   </div>
                   <div className="absolute top-0 left-0 flex items-center gap-2 p-3 text-white">
                     <button
@@ -240,7 +251,7 @@ export default function SharedModal({
           >
             <motion.div
               initial={false}
-              className="mx-auto mt-6 mb-6 flex aspect-[3/2] h-14"
+              className="mx-auto mt-6 mb-6 flex aspect-[3/2] h-20"
             >
               <AnimatePresence initial={false}>
                 {filteredImages.map((filteredImage) => {
@@ -251,17 +262,14 @@ export default function SharedModal({
                         x: `${Math.max((index - 1) * -100, 15 * -100)}%`,
                       }}
                       animate={{
-                        scale: filteredImage.index === index ? 1.25 : 1,
+                        scale:
+                          filteredImage._id === currentImage._id ? 1.25 : 1,
                         width: "100%",
                         x: `${Math.max(index * -100, 15 * -100)}%`,
                       }}
                       exit={{ width: "0%" }}
-                      // onHoverStart={() => {
-                      //   const img = new Image();
-                      //   img.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${filteredImage.id}`;
-                      // }}
                       onClick={() => changePhotoId(filteredImage.index)}
-                      key={filteredImage.index}
+                      key={filteredImage._id}
                       className={`${
                         filteredImage.index === index
                           ? "z-20 rounded-md shadow shadow-black/50"
@@ -275,13 +283,18 @@ export default function SharedModal({
                       <NextImage
                         alt="small photos on the bottom"
                         width={180}
+                        placeholder="blur"
+                        blurDataURL={filteredImage.image.asset.metadata.lqip}
                         height={120}
                         className={`${
                           filteredImage.index === index
                             ? "brightness-110 hover:brightness-110"
                             : "brightness-50 contrast-125 hover:brightness-75"
                         } h-full transform object-cover transition`}
-                        src={`/${filteredImage.id}`}
+                        src={urlForImage(filteredImage.image, {
+                          width: 180,
+                          height: 120,
+                        }).toString()}
                       />
                     </motion.button>
                   );

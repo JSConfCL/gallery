@@ -31,6 +31,11 @@ export default async function Page({
     },
   });
 
+  const imagesWithIndex = data.allEventImage.map((image, index) => ({
+    ...image,
+    index,
+  }));
+
   // const router = useRouter();
   // const { photoId } = router.query;
   // const [lastViewedPhoto, setLastViewedPhoto] = useLastViewedPhoto();
@@ -59,7 +64,7 @@ export default async function Page({
         />
       </Head> */}
       <main className="mx-auto max-w-[1960px] p-4">
-        <Modal images={data.allEventImage} eventId={eventId} />
+        <Modal images={imagesWithIndex} eventId={eventId} />
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4">
           <div className="after:content relative mb-5 flex h-[629px] flex-col items-center justify-end gap-4 overflow-hidden rounded-lg bg-jsconf-yellow px-6 pb-16 text-center text-white shadow-highlight after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight lg:pt-0">
             <div className="absolute inset-0 z-0 flex items-center justify-center opacity-20">
@@ -104,8 +109,8 @@ export default async function Page({
                   blurDataURL={image.asset.metadata.lqip}
                   id={_id}
                   src={urlForImage(image, {
-                    width: 720,
-                    height: 480,
+                    width: 500,
+                    height: 334,
                     fit: "fill",
                     auto: "format",
                     crop: "entropy",

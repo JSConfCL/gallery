@@ -14,7 +14,7 @@ const InternalModal = ({
   handleClose,
   eventId,
 }: {
-  images: EventImagesQuery["allEventImage"];
+  images: (EventImagesQuery["allEventImage"][number] & { index: number })[];
   handleClose: () => void;
   eventId: string;
 }) => {
@@ -61,11 +61,9 @@ const InternalModal = ({
 };
 export default function Modal({
   images,
-  onClose,
   eventId,
 }: {
-  images: EventImagesQuery["allEventImage"];
-  onClose?: () => void;
+  images: (EventImagesQuery["allEventImage"][number] & { index: number })[];
   eventId: string;
 }) {
   let overlayRef = useRef();
@@ -74,12 +72,7 @@ export default function Modal({
   const router = useRouter();
   function handleClose() {
     router.push(`/event/${eventId}`, { scroll: false });
-    onClose();
   }
-
-  const imagesMap = useMemo(() => {
-    return new Map(images.map((el, index) => [index, el._id]));
-  }, [images]);
 
   useEffect(() => {
     if (photoId) {

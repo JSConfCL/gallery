@@ -22,6 +22,7 @@ export const urlForImage = (
     height?: number;
     format?: ImageFormat;
     quality?: number;
+    forceDownload?: boolean;
     fit?: FitMode;
     crop?: CropMode;
     auto?: AutoMode;
@@ -46,6 +47,9 @@ export const urlForImage = (
     }
     if (params.auto) {
       img = img.auto(params.auto);
+    }
+    if (params.forceDownload) {
+      img = img.forceDownload(true);
     }
     return img;
   }

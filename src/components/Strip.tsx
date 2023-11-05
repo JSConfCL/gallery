@@ -71,7 +71,6 @@ export default function Strip({
         >
           <AnimatePresence initial={false}>
             {filteredImages.map(({ index: id }) => {
-              console.log({ id, index, currentImage, filteredImages });
               return (
                 <motion.button
                   initial={{

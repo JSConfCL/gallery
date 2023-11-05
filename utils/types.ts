@@ -10,7 +10,7 @@ export interface ImageProps {
 
 export interface SharedModalProps {
   index: number;
-  images?: EventImagesQuery["allEventImage"];
+  images?: (EventImagesQuery["allEventImage"][number] & { index: number })[];
   currentPhoto?: EventImagesQuery["allEventImage"][number];
   changePhotoId: (newVal: number) => void;
   closeModal: () => void;

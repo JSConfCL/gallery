@@ -121,7 +121,6 @@ export const Importer = ({
       loadAlbums();
     }
   }, [hiddenToken]);
-  console.log({ isSuperAdminQuery });
   // if (!isSuperAdminQuery.data?.me.isSuperAdmin) {
   //   throw new Error("No eres super admin");
   // }
