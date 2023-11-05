@@ -24,7 +24,7 @@ export const AuthBlock = () => {
   const pathname = usePathname();
 
   return (
-    <div className="w-10">
+    <div className="min-w-[4rem] flex justify-end">
       <SignedIn>
         <DropdownMenu>
           <DropdownMenuTrigger>

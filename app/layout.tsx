@@ -62,7 +62,7 @@ export default function RootLayout({
           </head>
           <body className="dark antialiased h-[100dvh] w-[100dvw] flex flex-col overflow-hidden">
             <Nav />
-            <div className="h-full overflow-auto relative">
+            <div className="h-full overflow-auto relative flex flex-col">
               {children}
               <Footer />
             </div>
