@@ -46,8 +46,6 @@ export const Importer = ({
 }: {
   communityEvents: AllEventsQuery["allEventInstance"];
 }) => {
-  const isSuperAdminQuery = useIsSuperAdminSuspenseQuery();
-
   const [hiddenToken, setHiddenToken] = useState("");
   const [token, setToken] = useState("");
   const [defaultAlbums, setDefaultAlbums] = useState<

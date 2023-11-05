@@ -7,7 +7,7 @@ import {
 } from "@clerk/clerk-react";
 import { User2 } from "lucide-react";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -18,13 +18,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import Link from "next/link";
+import { ImportImagesLink } from "./ImportImagesLink";
 
 export const AuthBlock = () => {
   const pathname = usePathname();
 
   return (
-    <div>
+    <div className="w-10">
       <SignedIn>
         <DropdownMenu>
           <DropdownMenuTrigger>
@@ -36,11 +36,9 @@ export const AuthBlock = () => {
             <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <Link href={"/import"} prefetch>
-                <DropdownMenuItem className="cursor-pointer">
-                  Importar Imágenes
-                </DropdownMenuItem>
-              </Link>
+              <Suspense fallback={null}>
+                <ImportImagesLink />
+              </Suspense>
               <SignOutButton>
                 <DropdownMenuItem className="cursor-pointer">
                   Salir

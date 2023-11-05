@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Import } from "../../src/features/import";
 import { API } from "../../src/gql/sanityApi";
 
@@ -7,7 +8,9 @@ export default async function Page() {
 
   return (
     <main className="mx-auto max-w-5xl p-4">
-      <Import communityEvents={communityEvents} />
+      <Suspense>
+        <Import communityEvents={communityEvents} />
+      </Suspense>
     </main>
   );
 }
