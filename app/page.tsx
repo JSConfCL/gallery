@@ -4,6 +4,7 @@ import Logo from "../src/components/Icons/Logo";
 import { Button } from "../src/components/ui/button";
 import { API } from "../src/gql/sanityApi";
 import { urlForImage } from "../src/lib/sanity";
+import { cx } from "class-variance-authority";
 
 export default async function Page() {
   const data = await API.allEvents();
@@ -37,15 +38,15 @@ export default async function Page() {
             </a>
           </Button>
         </div>
-        {communityEvents.map(({ _id, title, eventType }) => {
+        {communityEvents.map(({ _id, title, eventType, image }) => {
           return (
             <Link
               key={_id}
               href={`/event/${_id}`}
-              // href={`/?event=${_id}`}
-              // as={`/event/${_id}`}
               shallow
-              className="after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
+              className={cx(
+                "after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight",
+              )}
             >
               <div className="absolute inset-0 z-10 flex items-center justify-center ">
                 <span className="absolute left-0 z-10 right-0 bottom-0 h-[50%] opacity-40 bg-gradient-to-b from-black/0 via-black to-black"></span>
@@ -65,7 +66,15 @@ export default async function Page() {
                 placeholder="blur"
                 blurDataURL={eventType.image.asset.metadata.lqip}
                 id={_id}
-                src={urlForImage(eventType.image).url()}
+                src={
+                  urlForImage(image, {
+                    width: 720,
+                    height: 480,
+                    fit: "fill",
+                    auto: "format",
+                    crop: "entropy",
+                  })?.url() || urlForImage(eventType.image).url()
+                }
                 width={720}
                 height={480}
                 sizes="(max-width: 640px) 25w,

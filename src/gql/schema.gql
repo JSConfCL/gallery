@@ -342,6 +342,7 @@ type EventImage implements Document {
 
   """Date the document was last modified"""
   _updatedAt: DateTime
+  eventInstance: EventInstance
   eventType: EventType
   externalId: String
   externalURL: String
@@ -359,6 +360,7 @@ input EventImageFilter {
   _rev: StringFilter
   _type: StringFilter
   _updatedAt: DatetimeFilter
+  eventInstance: EventInstanceFilter
   eventType: EventTypeFilter
   externalId: StringFilter
   externalURL: StringFilter
