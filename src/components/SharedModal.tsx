@@ -1,3 +1,4 @@
+"use client";
 import {
   ArrowDownTrayIcon,
   ArrowTopRightOnSquareIcon,
@@ -8,13 +9,14 @@ import {
 } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import NextImage from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSwipeable } from "react-swipeable";
 import { variants } from "../../utils/animationVariants";
 import downloadPhoto from "../../utils/downloadPhoto";
 import { range } from "../../utils/range";
 import type { ImageProps, SharedModalProps } from "../../utils/types";
 import Twitter from "./Icons/Twitter";
+import { urlForImage } from "../lib/sanity";
 
 export default function SharedModal({
   index,
@@ -27,8 +29,8 @@ export default function SharedModal({
 }: SharedModalProps) {
   const [loaded, setLoaded] = useState(false);
 
-  let filteredImages = images?.filter((img: ImageProps) =>
-    range(index - 15, index + 15).includes(img.index),
+  let filteredImages = images?.filter((img) =>
+    range(index - 15, index + 15).includes(img),
   );
 
   const handlers = useSwipeable({
@@ -46,25 +48,45 @@ export default function SharedModal({
   });
 
   let currentImage = images ? images[index] : currentPhoto;
+
+  const options = useMemo(
+    () => ({
+      width: navigation ? 1280 : 1920,
+      height: navigation ? 853 : 1280,
+      quality: 100,
+      auto: "format" as "format",
+    }),
+    [navigation],
+  );
   // Preloads the next and previous images
   useEffect(() => {
-    let prevImageId = images ? images[index - 1] : undefined;
-    // TODO: Figure out a way to preload images that takes care of image size and quality that is more dynamic.
+    let prevImage = images ? images[index - 1] : undefined;
+    let prevPrevImage = images ? images[index - 2] : undefined;
+    let nextImage = images ? images[index + 1] : undefined;
+    let nextNextImage = images ? images[index + 2] : undefined;
 
-    // if (prevImageId) {
-    //   const prevImage = new Image();
-    //   prevImage.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${prevImageId.id}/w=1920,quality=75`;
-    //   const prevImage2 = new Image();
-    //   prevImage2.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${prevImageId.id}/w=1920,quality=75`;
-    // }
-    // let nextImageId = images ? images[index + 1] : undefined;
-    // if (nextImageId) {
-    //   const prevImage = new Image();
-    //   prevImage.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${nextImageId.id}/w=1920,quality=75`;
-    //   const prevImage2 = new Image();
-    //   prevImage2.src = `${process.env.NEXT_PUBLIC_PHOTOS_HOST}/${nextImageId.id}/w=1920,quality=75`;
-    // }
-  }, [currentImage, navigation]);
+    if (prevImage) {
+      const prevImageNode = new Image();
+      prevImageNode.src = urlForImage(prevImage.image, options).url();
+    }
+    if (prevPrevImage) {
+      setTimeout(() => {
+        const prevPrevImageNode = new Image();
+        prevPrevImageNode.src = urlForImage(prevPrevImage.image, options).url();
+      }, 100);
+    }
+
+    if (nextImage) {
+      const nextImageNode = new Image();
+      nextImageNode.src = urlForImage(nextImage.image, options).url();
+    }
+    if (nextNextImage) {
+      setTimeout(() => {
+        const nextNextImageNode = new Image();
+        nextNextImageNode.src = urlForImage(nextNextImage.image, options).url();
+      }, 100);
+    }
+  }, [currentImage, navigation, index]);
   return (
     <MotionConfig
       transition={{
@@ -94,7 +116,7 @@ export default function SharedModal({
                   className="absolute"
                 >
                   <NextImage
-                    src={currentImage.id}
+                    src={urlForImage(currentImage.image, options).url()}
                     width={navigation ? 1280 : 1920}
                     height={navigation ? 853 : 1280}
                     priority
@@ -102,6 +124,12 @@ export default function SharedModal({
                     onLoadingComplete={() =>
                       setTimeout(() => setLoaded(true), 300)
                     }
+                    placeholder="blur"
+                    blurDataURL={currentImage.image.asset.metadata.lqip}
+                    sizes="(max-width: 640px) 25w,
+                    (max-width: 1280px) 33w,
+                    (max-width: 1536px) 100w,
+                    35w"
                   />
                 </motion.div>
               </AnimatePresence>
@@ -122,7 +150,6 @@ export default function SharedModal({
                     opacity: 0,
                   }}
                   exit={{ opacity: 0 }}
-                  id="Buttons"
                   className="relative aspect-[3/2] max-h-full w-full"
                 >
                   {navigation && (

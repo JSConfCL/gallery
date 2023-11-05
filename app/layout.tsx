@@ -3,6 +3,7 @@ import "./globals.css";
 import { Nav } from "../src/components/Nav";
 import { Clerk } from "../src/components/Auth/clerk";
 import { Toaster } from "../src/components/ui/toaster";
+import { Footer } from "../src/features/footer";
 
 export default function RootLayout({
   children,
@@ -37,7 +38,10 @@ export default function RootLayout({
         </head>
         <body className="dark antialiased h-[100dvh] w-[100dvw] flex flex-col overflow-hidden">
           <Nav />
-          <div className="h-full overflow-auto relative">{children}</div>
+          <div className="h-full overflow-auto relative">
+            {children}
+            <Footer />
+          </div>
           <Toaster />
         </body>
       </html>

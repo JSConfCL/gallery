@@ -1,3 +1,5 @@
+import { EventImagesQuery } from "../src/gql/graphql";
+
 /* eslint-disable no-unused-vars */
 export interface ImageProps {
   id: string;
@@ -8,8 +10,8 @@ export interface ImageProps {
 
 export interface SharedModalProps {
   index: number;
-  images?: ImageProps[];
-  currentPhoto?: ImageProps;
+  images?: EventImagesQuery["allEventImage"];
+  currentPhoto?: EventImagesQuery["allEventImage"][number];
   changePhotoId: (newVal: number) => void;
   closeModal: () => void;
   navigation: boolean;

@@ -15,10 +15,8 @@ import { urlForImage } from "../../../src/lib/sanity";
 
 export default async function Page({
   params,
-  searchParams,
 }: {
   params: { eventId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const { eventId } = params;
   const data = await API.eventImages({
@@ -32,8 +30,6 @@ export default async function Page({
       },
     },
   });
-
-  console.log("data", data);
 
   // const router = useRouter();
   // const { photoId } = router.query;
@@ -50,7 +46,7 @@ export default async function Page({
 
   return (
     <>
-      <Head>
+      {/* <Head>
         <title>Galería de JavaScript Chile</title>
         <meta name="author" content="JavaScript Chile" />
         <meta
@@ -61,15 +57,9 @@ export default async function Page({
             "/69ae16b6-4cc0-4701-411c-4e06daec1400/w=1920,fit=cover"
           }
         />
-      </Head>
+      </Head> */}
       <main className="mx-auto max-w-[1960px] p-4">
-        {/* <Modal
-          images={images}
-          isOpen={Boolean(photoId)}
-          onClose={() => {
-            setLastViewedPhoto(photoId);
-          }}
-        /> */}
+        <Modal images={data.allEventImage} eventId={eventId} />
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4">
           <div className="after:content relative mb-5 flex h-[629px] flex-col items-center justify-end gap-4 overflow-hidden rounded-lg bg-jsconf-yellow px-6 pb-16 text-center text-white shadow-highlight after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight lg:pt-0">
             <div className="absolute inset-0 z-0 flex items-center justify-center opacity-20">
@@ -88,7 +78,7 @@ export default async function Page({
               </a>
             </p>
             <a
-              className="pointer z-10 mt-6 rounded-lg border border-black bg-black px-3 py-2 text-sm font-semibold text-white transition hover:bg-white/10 hover:text-white md:mt-4 bg-black"
+              className="pointer z-10 mt-6 rounded-lg border border-black px-3 py-2 text-sm font-semibold text-white transition hover:bg-white/10 hover:text-white md:mt-4 bg-black"
               href="https://github.com/JSConfCL/2023_images"
               target="_blank"
               rel="noreferrer"
@@ -100,12 +90,9 @@ export default async function Page({
             return (
               <Link
                 key={_id}
-                href={`/event/${eventId}/p/${_id}`}
+                href={`/event/${eventId}?photoId=${_id}`}
+                scroll={false}
                 shallow
-                // as={`/p/${index}`}
-                // ref={
-                //   index === Number(lastViewedPhoto) ? lastViewedPhotoRef : null
-                // }
                 className="after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
               >
                 <Image
@@ -135,78 +122,6 @@ export default async function Page({
           })}
         </div>
       </main>
-      {/* <footer className="flex flex-col gap-2 p-7 text-center text-white/80 sm:p-12">
-        <div>
-          Gracias a{" "}
-          <a
-            href="https://santoremedio.cl/"
-            target="_blank"
-            className="font-bold text-jsconf-yellow hover:text-white font-koulen"
-            rel="noreferrer"
-          >
-            Santo Remedio
-          </a>
-          ,{" "}
-          <a
-            href="https://jsconf.cl/"
-            target="_blank"
-            className="font-bold text-jsconf-yellow hover:text-white font-koulen"
-            rel="noreferrer"
-          >
-            Corporación JavaScript Chile
-          </a>
-          , y a la comunidad 💛 por sus fotos y media.
-        </div>
-        <div>
-          Síguenos en{" "}
-          <a
-            href="https://www.linkedin.com/company/jsconf-chile"
-            target="_blank"
-            className="font-bold text-jsconf-yellow hover:text-white font-koulen"
-            rel="noreferrer"
-          >
-            Linkedin
-          </a>
-          ,{" "}
-          <a
-            href="https://twitter.com/jsconfcl"
-            target="_blank"
-            className="font-bold text-jsconf-yellow hover:text-white font-koulen"
-            rel="noreferrer"
-          >
-            Twitter
-          </a>
-          ,{" "}
-          <a
-            href="https://www.instagram.com/jsconf.cl/"
-            target="_blank"
-            className="font-bold text-jsconf-yellow hover:text-white font-koulen"
-            rel="noreferrer"
-          >
-            Instagram
-          </a>
-          , y{" "}
-          <a
-            href="https://www.facebook.com/jsconfcl"
-            target="_blank"
-            className="font-bold text-jsconf-yellow hover:text-white font-koulen"
-            rel="noreferrer"
-          >
-            Facebook
-          </a>
-        </div>
-        <div>
-          Esta galería es un fork de{" "}
-          <a
-            href="https://nextjsconf-pics.vercel.app/"
-            target="_blank"
-            className="font-bold text-jsconf-yellow hover:text-white font-koulen"
-            rel="noreferrer"
-          >
-            NEXT.js CONF Gallery
-          </a>
-        </div>
-      </footer> */}
     </>
   );
 }
