@@ -8,12 +8,7 @@ import JSChileLogo from "../src/components/Icons/JSChileLogo";
 
 export default async function Page() {
   const data = await API.allEvents();
-  const communityEvents =
-    [
-      ...data?.allEventInstance,
-      ...data?.allEventInstance,
-      ...data?.allEventInstance,
-    ] ?? [];
+  const communityEvents = data?.allEventInstance ?? [];
 
   return (
     <main className="mx-auto max-w-[1960px] p-4 flex-1">
