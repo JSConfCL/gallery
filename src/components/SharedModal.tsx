@@ -7,17 +7,14 @@ import {
   ChevronRightIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { AnimatePresence, motion, MotionConfig } from "framer-motion";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import NextImage from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { useSwipeable } from "react-swipeable";
 import { variants } from "../../utils/animationVariants";
-import downloadPhoto from "../../utils/downloadPhoto";
-import { range } from "../../utils/range";
-import type { ImageProps, SharedModalProps } from "../../utils/types";
-import Twitter from "./Icons/Twitter";
+import type { SharedModalProps } from "../../utils/types";
 import { urlForImage } from "../lib/sanity";
-import { EventImagesQuery } from "../gql/graphql";
+import Twitter from "./Icons/Twitter";
 
 export default function SharedModal({
   index,

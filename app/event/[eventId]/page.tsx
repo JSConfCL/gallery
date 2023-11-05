@@ -1,16 +1,8 @@
-import type { NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import Logo from "../../../src/components/Icons/Logo";
 import Modal from "../../../src/components/Modal";
-import getResults from "../../../utils/cachedImages";
-import getBase64ImageUrl from "../../../utils/generateBlurPlaceholder";
 import { API } from "../../../src/gql/sanityApi";
-import { ImageProps } from "../../../utils/types";
-import { useLastViewedPhoto } from "../../../utils/useLastViewedPhoto";
-import imageLoader from "../../../utils/image-loader";
 import { urlForImage } from "../../../src/lib/sanity";
 
 export default async function Page({
@@ -23,7 +15,8 @@ export default async function Page({
     eventId,
     where: {
       eventInstance: {
-        // @ts-expect-error los tipos estan mal, pide que le enviemos todas as propiedades de eventInstance, cuando solo necesita una
+        // @ts-expect-error los tipos estan mal, pide que le enviemos todas as
+        // propiedades de eventInstance, cuando solo necesita una.
         _id: {
           eq: eventId,
         },
@@ -36,33 +29,8 @@ export default async function Page({
     index,
   }));
 
-  // const router = useRouter();
-  // const { photoId } = router.query;
-  // const [lastViewedPhoto, setLastViewedPhoto] = useLastViewedPhoto();
-  // const lastViewedPhotoRef = useRef<HTMLAnchorElement>(null);
-
-  // useEffect(() => {
-  //   // This effect keeps track of the last viewed photo in the modal to keep the index page in sync when the user navigates back
-  //   if (lastViewedPhoto && !photoId) {
-  //     lastViewedPhotoRef.current.scrollIntoView({ block: "center" });
-  //     setLastViewedPhoto(null);
-  //   }
-  // }, [photoId, lastViewedPhoto, setLastViewedPhoto]);
-
   return (
     <>
-      {/* <Head>
-        <title>Galería de JavaScript Chile</title>
-        <meta name="author" content="JavaScript Chile" />
-        <meta
-          name="image"
-          property="og:image"
-          content={
-            process.env.NEXT_PUBLIC_PHOTOS_HOST +
-            "/69ae16b6-4cc0-4701-411c-4e06daec1400/w=1920,fit=cover"
-          }
-        />
-      </Head> */}
       <main className="mx-auto max-w-[1960px] p-4">
         <Modal images={imagesWithIndex} eventId={eventId} />
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4">

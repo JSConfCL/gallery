@@ -9,6 +9,7 @@ import * as Operations from './graphql';
 
 
 
+
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
 
@@ -21,6 +22,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     eventImages(variables: Operations.EventImagesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<Operations.EventImagesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<Operations.EventImagesQuery>(Operations.EventImagesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'eventImages', 'query');
+    },
+    singleEventImage(variables: Operations.SingleEventImageQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<Operations.SingleEventImageQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<Operations.SingleEventImageQuery>(Operations.SingleEventImageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'singleEventImage', 'query');
     }
   };
 }

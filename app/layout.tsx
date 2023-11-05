@@ -4,6 +4,39 @@ import { Nav } from "../src/components/Nav";
 import { Clerk } from "../src/components/Auth/clerk";
 import { Toaster } from "../src/components/ui/toaster";
 import { Footer } from "../src/features/footer";
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }): Promise<Metadata> {
+  return {
+    metadataBase: new URL("/", process.env.NEXT_PUBLIC_BASE_URL),
+    title: "Javascript Chile Gallery",
+    description: "Revive los eventos de la comunidad de JavaScript Chile!",
+    openGraph: {
+      siteName: "Javascript Chile Gallery",
+      title: "Javascript Chile Gallery",
+      description: "Revive los eventos de la comunidad de JavaScript Chile!",
+      type: "website",
+      url: new URL(`/`, process.env.NEXT_PUBLIC_BASE_URL).toString(),
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@jsconfchile",
+      title: "Javascript Chile Gallery",
+      description: "Revive los eventos de la comunidad de JavaScript Chile!",
+      images: [
+        {
+          url: new URL(
+            `/og-image.png`,
+            process.env.NEXT_PUBLIC_BASE_URL,
+          ).toString(),
+          width: 1200,
+          height: 630,
+          alt: "Javascript Chile Gallery",
+        },
+      ],
+    },
+  };
+}
 
 export default function RootLayout({
   children,

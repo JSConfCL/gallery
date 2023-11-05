@@ -1,0 +1,17 @@
+query singleEventImage($photoId: ID!) {
+  EventImage(id: $photoId) {
+    _id
+    title
+    url
+    image {
+      asset {
+        _id
+        metadata {
+          lqip
+          blurHash
+        }
+        assetId
+      }
+    }
+  }
+}

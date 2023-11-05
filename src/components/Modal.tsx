@@ -1,25 +1,23 @@
 "use client";
 import { Dialog, Transition } from "@headlessui/react";
-import { AnimatePresence, motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Fragment, useEffect, useRef, useState } from "react";
 import useKeypress from "react-use-keypress";
-import type { ImageProps } from "../../utils/types";
-import SharedModal from "./SharedModal";
 import { EventImagesQuery } from "../gql/graphql";
-import { useSearchParams, useParams } from "next/navigation";
+import SharedModal from "./SharedModal";
 
 const InternalModal = ({
   images,
   handleClose,
   eventId,
+  photoId,
 }: {
   images: (EventImagesQuery["allEventImage"][number] & { index: number })[];
   handleClose: () => void;
   eventId: string;
+  photoId: string;
 }) => {
   const router = useRouter();
-  const photoId = useSearchParams().get("photoId");
   let index = Number(images.findIndex((el) => el._id === photoId));
 
   const [direction, setDirection] = useState(0);
@@ -62,12 +60,15 @@ const InternalModal = ({
 export default function Modal({
   images,
   eventId,
+  forcedPhotoId,
 }: {
   images: (EventImagesQuery["allEventImage"][number] & { index: number })[];
   eventId: string;
+  forcedPhotoId?: string;
 }) {
   let overlayRef = useRef();
   const photoId = useSearchParams().get("photoId");
+  const finalPhotoId = forcedPhotoId || photoId;
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   function handleClose() {
@@ -75,12 +76,12 @@ export default function Modal({
   }
 
   useEffect(() => {
-    if (photoId) {
+    if (finalPhotoId) {
       setIsOpen(true);
     } else {
       setIsOpen(false);
     }
-  }, [photoId]);
+  }, [finalPhotoId]);
 
   return (
     <Transition show={isOpen} as={Fragment}>
@@ -114,6 +115,7 @@ export default function Modal({
               images={images}
               handleClose={handleClose}
               eventId={eventId}
+              photoId={finalPhotoId}
             />
           </Dialog.Panel>
         </Transition.Child>
