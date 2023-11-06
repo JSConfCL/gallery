@@ -1,5 +1,5 @@
 query allEvents {
-  allEventInstance {
+  allEventInstance(where: { galleryEnabled: { eq: true } }) {
     _id
     title
     startDate
