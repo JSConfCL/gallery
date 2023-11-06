@@ -182,7 +182,7 @@ export default function SharedModal({
                         width: 4000,
                         auto: "format",
                         quality: 100,
-                      }).toString()}
+                      })}
                       className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
                       target="_blank"
                       title="Open full-size version"
@@ -205,7 +205,7 @@ export default function SharedModal({
                         auto: "format",
                         quality: 100,
                         forceDownload: true,
-                      }).toString()}
+                      })}
                       className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
                       target="_blank"
                       title="Download fullsize version"
@@ -291,7 +291,7 @@ export default function SharedModal({
                         src={urlForImage(filteredImage.image, {
                           width: 180,
                           height: 120,
-                        }).toString()}
+                        })}
                       />
                     </motion.button>
                   );

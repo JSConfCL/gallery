@@ -23,7 +23,6 @@ query eventImages($eventId: ID!, $where: EventImageFilter) {
         _id
         metadata {
           lqip
-          blurHash
         }
         assetId
       }
@@ -38,7 +37,6 @@ query eventImages($eventId: ID!, $where: EventImageFilter) {
         _id
         metadata {
           lqip
-          blurHash
         }
         assetId
       }

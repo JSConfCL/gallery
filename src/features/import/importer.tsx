@@ -246,10 +246,7 @@ export const Importer = ({
                   </CardHeader>
                   <CardContent className="flex flex-col gap-4">
                     <img
-                      src={
-                        urlForImage(event?.image) ||
-                        urlForImage(event.eventType.image)
-                      }
+                      src={urlForImage(event?.image ?? event.eventType.image)}
                       className="w-full h-52 object-cover"
                     />
                     <div>

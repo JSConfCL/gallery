@@ -71,10 +71,7 @@ export default async function Page() {
                 placeholder="blur"
                 blurDataURL={eventType.image.asset.metadata.lqip}
                 id={_id}
-                src={
-                  urlForImage(image, imageConfig) ||
-                  urlForImage(eventType.image, imageConfig)
-                }
+                src={urlForImage(image ?? eventType.image, imageConfig)}
                 width={720}
                 height={480}
                 sizes="(max-width: 640px) 25w,

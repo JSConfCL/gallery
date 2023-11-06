@@ -1,6 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
-import Logo from "../../../../src/components/Icons/Logo";
 import Modal from "../../../../src/components/Modal";
 import { API } from "../../../../src/gql/sanityApi";
 import { urlForImage } from "../../../../src/lib/sanity";
@@ -36,11 +34,13 @@ export default async function Page({
     ? `${data.EventInstance.eventType.title} ${data.EventInstance.title}`
     : data.EventInstance.eventType.title;
 
+  const image = data.EventInstance.image ?? data.EventInstance.eventType.image;
+
   return (
     <main className="mx-auto max-w-[1960px] p-4">
       <Modal images={imagesWithIndex} eventId={eventId} />
       <AnimatedGridContainer>
-        <EventCard eventName={eventName} />
+        <EventCard eventName={eventName} photo={image} />
         {/* <div className="absolute inset-0 z-0 flex items-center justify-center opacity-20">
             <span className="flex max-h-full max-w-full items-center justify-center"></span>
             <span className="absolute left-0 right-0 bottom-0 h-[400px] bg-gradient-to-b from-black/0 via-black to-black"></span>
