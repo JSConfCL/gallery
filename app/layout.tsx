@@ -64,7 +64,6 @@ export default function RootLayout({
             <Nav />
             <div className="h-full overflow-auto relative flex flex-col">
               {children}
-              <Footer />
             </div>
             <Toaster />
           </body>

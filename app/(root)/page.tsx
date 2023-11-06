@@ -1,23 +1,30 @@
-import Link from "next/link";
 import Image from "next/image";
-import { Button } from "../src/components/ui/button";
-import { API } from "../src/gql/sanityApi";
-import { urlForImage } from "../src/lib/sanity";
-import { cx } from "class-variance-authority";
-import JSChileLogo from "../src/components/Icons/JSChileLogo";
+import { Button } from "../../src/components/ui/button";
+import { API } from "../../src/gql/sanityApi";
+import { ImageParams, urlForImage } from "../../src/lib/sanity";
+import JSChileLogo from "../../src/components/Icons/JSChileLogo";
+import { AnimatedNavigationCardLink } from "../../src/components/Transitions/AnimatedNavigationCardLink";
+import { AnimatedGridContainer } from "../../src/components/Transitions/AnimatedGridContainer";
 
+const imageConfig = {
+  width: 720,
+  height: 480,
+  fit: "fill",
+  auto: "format",
+  crop: "entropy",
+} satisfies ImageParams;
 export default async function Page() {
   const data = await API.allEvents();
   const communityEvents = data?.allEventInstance ?? [];
 
   return (
     <main className="mx-auto max-w-[1960px] p-4 flex-1">
-      <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4">
-        <div className="after:content relative mb-5 flex h-[629px] flex-col items-center justify-end gap-4 overflow-hidden rounded-lg bg-jsconf-yellow px-6 pb-16 text-center text-white shadow-highlight after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight lg:pt-0">
+      <AnimatedGridContainer>
+        <div className="after:content relative flex flex-grow-0 row-span-1 md:row-span-2 flex-col items-center justify-end gap-4 overflow-hidden rounded-lg bg-jsconf-yellow px-6 pb-16 text-center text-white shadow-highlight after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight lg:pt-0">
           <div className="absolute inset-0 z-0 flex items-center justify-center opacity-20 pointer-events-none">
             <span className="absolute left-0 right-0 bottom-0 h-[400px] bg-gradient-to-b from-black/0 via-black to-black"></span>
           </div>
-          <JSChileLogo color="#000" size={200} />
+          <JSChileLogo color="#000" size={150} />
           <h1 className="mt-8 mb-4 text-black font-bold uppercase tracking-widest font-koulen">
             JavaScript Chile
           </h1>
@@ -40,15 +47,13 @@ export default async function Page() {
         </div>
         {communityEvents.map(({ _id, title, eventType, image }) => {
           return (
-            <Link
+            <AnimatedNavigationCardLink
+              id={_id}
               key={_id}
               href={`/event/${_id}`}
-              shallow
-              className={cx(
-                "after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight",
-              )}
+              className="after:content group relative block w-full cursor-pointer after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
             >
-              <div className="absolute inset-0 z-10 flex items-center justify-center ">
+              <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
                 <span className="absolute left-0 z-10 right-0 bottom-0 h-[50%] opacity-40 bg-gradient-to-b from-black/0 via-black to-black"></span>
                 <div className="absolute bottom-0 z-20 left-0 right-0 flex flex-col w-fill h-[50%] items-end justify-end">
                   <h2 className="px-4 py-3 w-fill text-white/80 flex flex-col gap">
@@ -67,13 +72,8 @@ export default async function Page() {
                 blurDataURL={eventType.image.asset.metadata.lqip}
                 id={_id}
                 src={
-                  urlForImage(image, {
-                    width: 720,
-                    height: 480,
-                    fit: "fill",
-                    auto: "format",
-                    crop: "entropy",
-                  })?.url() || urlForImage(eventType.image).url()
+                  urlForImage(image, imageConfig) ||
+                  urlForImage(eventType.image, imageConfig)
                 }
                 width={720}
                 height={480}
@@ -82,10 +82,10 @@ export default async function Page() {
                   (max-width: 1536px) 100w,
                   35w"
               />
-            </Link>
+            </AnimatedNavigationCardLink>
           );
         })}
-      </div>
+      </AnimatedGridContainer>
     </main>
   );
 }

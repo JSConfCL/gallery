@@ -17,14 +17,14 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    allEvents(variables?: Operations.AllEventsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<Operations.AllEventsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<Operations.AllEventsQuery>(Operations.AllEventsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'allEvents', 'query');
-    },
     eventImages(variables: Operations.EventImagesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<Operations.EventImagesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<Operations.EventImagesQuery>(Operations.EventImagesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'eventImages', 'query');
     },
     singleEventImage(variables: Operations.SingleEventImageQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<Operations.SingleEventImageQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<Operations.SingleEventImageQuery>(Operations.SingleEventImageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'singleEventImage', 'query');
+    },
+    allEvents(variables?: Operations.AllEventsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<Operations.AllEventsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<Operations.AllEventsQuery>(Operations.AllEventsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'allEvents', 'query');
     }
   };
 }

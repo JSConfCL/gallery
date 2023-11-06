@@ -13,20 +13,22 @@ const imageBuilder = createImageUrlBuilder({
   dataset: sanityDataset,
 });
 
+export type ImageParams = {
+  width?: number;
+  height?: number;
+  format?: ImageFormat;
+  quality?: number;
+  forceDownload?: boolean;
+  fit?: FitMode;
+  crop?: CropMode;
+  auto?: AutoMode;
+};
+
 export const urlForImage = (
   source?: {
     asset: { _id: string | null; assetId: string | null } | null;
   } | null,
-  params: {
-    width?: number;
-    height?: number;
-    format?: ImageFormat;
-    quality?: number;
-    forceDownload?: boolean;
-    fit?: FitMode;
-    crop?: CropMode;
-    auto?: AutoMode;
-  } = {},
+  params: ImageParams = {},
 ) => {
   if (source) {
     let img = imageBuilder?.image(source);
@@ -51,6 +53,6 @@ export const urlForImage = (
     if (params.forceDownload) {
       img = img.forceDownload(true);
     }
-    return img;
+    return img.url();
   }
 };

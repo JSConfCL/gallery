@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "../../../../../src/components/Icons/Logo";
-import Modal from "../../../../../src/components/Modal";
-import { API } from "../../../../../src/gql/sanityApi";
-import { urlForImage } from "../../../../../src/lib/sanity";
+import Logo from "../../../../../../src/components/Icons/Logo";
+import Modal from "../../../../../../src/components/Modal";
+import { API } from "../../../../../../src/gql/sanityApi";
+import { urlForImage } from "../../../../../../src/lib/sanity";
 import { Metadata, ResolvingMetadata } from "next/types";
 
 export async function generateMetadata(
@@ -113,7 +113,6 @@ export default async function Page({
               className="after:content group relative mb-5 block w-full cursor-zoom-in after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
             >
               <Image
-                // loader={imageLoader}
                 alt="Next.js Conf photo"
                 className="transform rounded-lg brightness-90 transition will-change-auto group-hover:brightness-110"
                 style={{ transform: "translate3d(0, 0, 0)" }}
@@ -126,7 +125,7 @@ export default async function Page({
                   fit: "fill",
                   auto: "format",
                   crop: "entropy",
-                })?.url()}
+                })}
                 width={720}
                 height={480}
                 sizes="(max-width: 640px) 25w,

@@ -69,23 +69,23 @@ export default function SharedModal({
 
     if (prevImage) {
       const prevImageNode = new Image();
-      prevImageNode.src = urlForImage(prevImage.image, options).url();
+      prevImageNode.src = urlForImage(prevImage.image, options);
     }
     if (prevPrevImage) {
       setTimeout(() => {
         const prevPrevImageNode = new Image();
-        prevPrevImageNode.src = urlForImage(prevPrevImage.image, options).url();
+        prevPrevImageNode.src = urlForImage(prevPrevImage.image, options);
       }, 100);
     }
 
     if (nextImage) {
       const nextImageNode = new Image();
-      nextImageNode.src = urlForImage(nextImage.image, options).url();
+      nextImageNode.src = urlForImage(nextImage.image, options);
     }
     if (nextNextImage) {
       setTimeout(() => {
         const nextNextImageNode = new Image();
-        nextNextImageNode.src = urlForImage(nextNextImage.image, options).url();
+        nextNextImageNode.src = urlForImage(nextNextImage.image, options);
       }, 100);
     }
   }, [currentImage, navigation, index]);
@@ -118,7 +118,7 @@ export default function SharedModal({
                   className="absolute"
                 >
                   <NextImage
-                    src={urlForImage(currentImage.image, options).url()}
+                    src={urlForImage(currentImage.image, options)}
                     width={navigation ? 1280 : 1920}
                     height={navigation ? 853 : 1280}
                     priority

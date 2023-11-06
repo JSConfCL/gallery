@@ -1,6 +1,4 @@
 import React from "react";
-import Logo from "../Icons/Logo";
-import { Input } from "../ui/input";
 import { AuthBlock } from "./AuthBlock";
 import Link from "next/link";
 import JSChileLogo from "../Icons/JSChileLogo";
@@ -12,7 +10,9 @@ export const Nav = () => {
         <JSChileLogo color="#fff" size={50} />
       </Link>
       <div className="flex flex-1 justify-center">
-        <p className="text-lg font-bold">JavaScript Chile — Galería</p>
+        <p className="text-md md:text-lg font-bold">
+          JavaScript Chile — Galería
+        </p>
         {/* <Input placeholder="Busca tu evento" className="max-w-lg" /> */}
       </div>
       <AuthBlock />
