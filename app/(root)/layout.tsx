@@ -30,10 +30,7 @@ const Child = forwardRef<
 
 Child.displayName = "Child";
 
-export default function TransitionLayout(props: {
-  children: React.ReactNode;
-  modal: React.ReactNode;
-}) {
+export default function TransitionLayout(props: { children: React.ReactNode }) {
   const segment = useSelectedLayoutSegment();
   return (
     <AnimatePresence mode="popLayout" initial={false}>
