@@ -2,10 +2,11 @@
 import { Importer } from "./importer";
 import { Suspense, useEffect, useState } from "react";
 import { ErrorBoundary } from "./errorBoundary";
-import { useRouter } from "next/navigation";
-import { SignedIn, useAuth } from "@clerk/clerk-react";
+import { usePathname, useRouter } from "next/navigation";
+import { SignInButton, SignedIn, SignedOut, useAuth } from "@clerk/clerk-react";
 import { AllEventsQuery } from "../../gql/graphql";
 import { useIsSuperAdminSuspenseQuery } from "../../gql/jschileAPI";
+import { Button } from "../../components/ui/button";
 
 const ImportImpl = ({
   communityEvents,
@@ -37,9 +38,17 @@ export const Import = ({
 }: {
   communityEvents: AllEventsQuery["allEventInstance"];
 }) => {
+  const pathname = usePathname();
   return (
-    <SignedIn>
-      <ImportImpl communityEvents={communityEvents} />
-    </SignedIn>
+    <>
+      <SignedIn>
+        <ImportImpl communityEvents={communityEvents} />
+      </SignedIn>
+      <SignedOut>
+        <SignInButton mode="modal" redirectUrl={pathname}>
+          <Button variant="secondary">Ingresar</Button>
+        </SignInButton>
+      </SignedOut>
+    </>
   );
 };

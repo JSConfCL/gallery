@@ -1,12 +1,6 @@
 "use client";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignOutButton,
-} from "@clerk/clerk-react";
+import { SignedIn, SignOutButton } from "@clerk/clerk-react";
 import { User2 } from "lucide-react";
-import { usePathname } from "next/navigation";
 import React, { Suspense } from "react";
 import { Button } from "../ui/button";
 import {
@@ -21,8 +15,6 @@ import {
 import { ImportImagesLink } from "./ImportImagesLink";
 
 export const AuthBlock = () => {
-  const pathname = usePathname();
-
   return (
     <div className="min-w-[4rem] flex justify-end">
       <SignedIn>
@@ -48,11 +40,6 @@ export const AuthBlock = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </SignedIn>
-      <SignedOut>
-        <SignInButton mode="modal" redirectUrl={pathname}>
-          <Button variant="secondary">Ingresar</Button>
-        </SignInButton>
-      </SignedOut>
     </div>
   );
 };
