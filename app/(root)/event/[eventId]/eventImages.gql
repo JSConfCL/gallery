@@ -4,9 +4,20 @@ query eventImages($eventId: ID!, $where: EventImageFilter) {
     title
     startDate
     endDate
-    url
-    bgColor
     mergedTitle
+    eventType {
+      _id
+      title
+      image {
+        asset {
+          _id
+          metadata {
+            lqip
+          }
+          assetId
+        }
+      }
+    }
     image {
       asset {
         _id

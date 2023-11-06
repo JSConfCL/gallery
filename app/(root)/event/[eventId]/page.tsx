@@ -6,6 +6,7 @@ import { API } from "../../../../src/gql/sanityApi";
 import { urlForImage } from "../../../../src/lib/sanity";
 import { AnimatedNavigationCardLink } from "../../../../src/components/Transitions/AnimatedNavigationCardLink";
 import { AnimatedGridContainer } from "../../../../src/components/Transitions/AnimatedGridContainer";
+import { EventCard } from "../../../../src/components/EventCard";
 
 export default async function Page({
   params,
@@ -31,12 +32,16 @@ export default async function Page({
     index,
   }));
 
+  const eventName = data.EventInstance.eventType.title
+    ? `${data.EventInstance.eventType.title} ${data.EventInstance.title}`
+    : data.EventInstance.eventType.title;
+
   return (
     <main className="mx-auto max-w-[1960px] p-4">
       <Modal images={imagesWithIndex} eventId={eventId} />
       <AnimatedGridContainer>
-        <div className="after:content relative flex flex-grow-0 row-span-1 md:row-span-2 flex-col items-center justify-end gap-4 overflow-hidden rounded-lg bg-jsconf-yellow px-6 pb-16 text-center text-white shadow-highlight after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight lg:pt-0">
-          <div className="absolute inset-0 z-0 flex items-center justify-center opacity-20">
+        <EventCard eventName={eventName} />
+        {/* <div className="absolute inset-0 z-0 flex items-center justify-center opacity-20">
             <span className="flex max-h-full max-w-full items-center justify-center"></span>
             <span className="absolute left-0 right-0 bottom-0 h-[400px] bg-gradient-to-b from-black/0 via-black to-black"></span>
           </div>
@@ -59,7 +64,7 @@ export default async function Page({
           >
             Github Repo
           </a>
-        </div>
+        </EventCard> */}
         {data.allEventImage.map(({ _id, title, image }) => {
           return (
             <AnimatedNavigationCardLink

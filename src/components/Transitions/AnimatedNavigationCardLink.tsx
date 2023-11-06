@@ -11,7 +11,7 @@ export const AnimatedNavigationCardLink = ({
 }: ComponentProps<typeof MotionLink> & { id: string }) => {
   const shown = useRef(false);
   const animationControl = useAnimation();
-  const delay = useRef(Math.random() * 0.5 + 0.3);
+  const delay = useRef(Math.random() * 0.5 + 0.1);
   const ref = useRef(null);
   const isInView = useInView(ref);
 

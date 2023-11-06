@@ -30,7 +30,7 @@ const Child = forwardRef<
 
 Child.displayName = "Child";
 
-export default function ClientLayout(props: {
+export default function RootLayout(props: {
   children: React.ReactNode;
   modal: React.ReactNode;
 }) {

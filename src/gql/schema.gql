@@ -402,6 +402,9 @@ type EventInstance implements Document {
   bgColor: String
   endDate: Date
   eventType: EventType
+
+  """Habilita este evento para aparecer en la galería de imágenes"""
+  galleryEnabled: Boolean
   image: Image
   mergedTitle: Boolean
   startDate: Date
@@ -421,6 +424,7 @@ input EventInstanceFilter {
   bgColor: StringFilter
   endDate: DateFilter
   eventType: EventTypeFilter
+  galleryEnabled: BooleanFilter
   image: ImageFilter
   mergedTitle: BooleanFilter
   startDate: DateFilter
@@ -437,6 +441,7 @@ input EventInstanceSorting {
   _updatedAt: SortOrder
   bgColor: SortOrder
   endDate: SortOrder
+  galleryEnabled: SortOrder
   image: ImageSorting
   mergedTitle: SortOrder
   startDate: SortOrder
