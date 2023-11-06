@@ -3,7 +3,6 @@ import "./globals.css";
 import { Nav } from "../src/components/Nav";
 import { Clerk } from "../src/components/Auth/clerk";
 import { Toaster } from "../src/components/ui/toaster";
-import { Footer } from "../src/features/footer";
 import { Metadata } from "next";
 import { JSChileApolloProvider } from "../src/components/ApolloProvider";
 
