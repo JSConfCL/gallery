@@ -39,15 +39,31 @@ export const Import = ({
   communityEvents: AllEventsQuery["allEventInstance"];
 }) => {
   const pathname = usePathname();
+  const [redirectUrl, setRedirectUrl] = useState("");
+
+  useEffect(() => {
+    setRedirectUrl(window.location.host);
+  }, []);
+
   return (
     <>
       <SignedIn>
         <ImportImpl communityEvents={communityEvents} />
       </SignedIn>
       <SignedOut>
-        <SignInButton mode="modal" redirectUrl={pathname}>
-          <Button variant="secondary">Ingresar</Button>
-        </SignInButton>
+        {process.env.NEXT_PUBLIC_SIGN_IN_URL ? (
+          <Button asChild variant="secondary">
+            <a
+              href={`${process.env.NEXT_PUBLIC_SIGN_IN_URL}?redirect_url=https://${redirectUrl}`}
+            >
+              Ingresar
+            </a>
+          </Button>
+        ) : (
+          <SignInButton mode="modal" redirectUrl={pathname}>
+            <Button variant="secondary">Ingresar</Button>
+          </SignInButton>
+        )}
       </SignedOut>
     </>
   );
