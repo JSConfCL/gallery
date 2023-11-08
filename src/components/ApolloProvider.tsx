@@ -1,7 +1,6 @@
 "use client";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/clerk-react";
 
 const useGetClient = (token: string) => {

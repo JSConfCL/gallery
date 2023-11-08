@@ -20,6 +20,7 @@ import {
   useIsSuperAdminSuspenseQuery,
 } from "../../gql/jschileAPI";
 import { urlForImage } from "../../lib/sanity";
+import { useRouter } from "next/navigation";
 
 export const TOKEN_KEY = "jscl-import-token";
 
@@ -48,6 +49,7 @@ export const Importer = ({
 }) => {
   const [hiddenToken, setHiddenToken] = useState("");
   const [token, setToken] = useState("");
+  const router = useRouter();
   const [defaultAlbums, setDefaultAlbums] = useState<
     {
       id: string;
@@ -62,6 +64,7 @@ export const Importer = ({
   const [loading, setLoading] = useState(false);
   const getAlbums = useGetAlbums();
   const { toast } = useToast();
+  const superAdminQuery = useIsSuperAdminSuspenseQuery();
   const [importGoogleAlbumMutation, importGoogleAlbumMutationResults] =
     useImportGoogleAlbumMutation({
       onCompleted: () => {
@@ -116,12 +119,12 @@ export const Importer = ({
 
   useEffect(() => {
     if (hiddenToken) {
+      if (!superAdminQuery.data?.me.isSuperAdmin) {
+        router.replace("/");
+      }
       loadAlbums();
     }
   }, [hiddenToken]);
-  // if (!isSuperAdminQuery.data?.me.isSuperAdmin) {
-  //   throw new Error("No eres super admin");
-  // }
   return (
     <div className="flex flex-col gap-8 pb-[30vh]">
       <div className="flex flex-col gap-10">

@@ -5,6 +5,7 @@ import { ElementRef, forwardRef } from "react";
 import FrozenRouter from "../../src/components/FrozenRouter";
 import { Footer } from "../../src/features/footer";
 import { ScrollArea } from "../../src/components/ui/scroll-area";
+import { useIsSuperAdminQuery } from "../../src/gql/jschileAPI";
 
 const Child = forwardRef<
   ElementRef<typeof motion.div>,
@@ -32,6 +33,7 @@ Child.displayName = "Child";
 
 export default function TransitionLayout(props: { children: React.ReactNode }) {
   const segment = useSelectedLayoutSegment();
+  useIsSuperAdminQuery();
   return (
     <AnimatePresence mode="popLayout" initial={false}>
       <Child key={segment}>{props.children}</Child>

@@ -1,5 +1,5 @@
 "use client";
-import { ClerkProvider } from "@clerk/clerk-react";
+import { ClerkProvider } from "@clerk/nextjs";
 import React from "react";
 
 type Props = {
@@ -10,12 +10,11 @@ export const Clerk = ({ children }: Props) => {
   return (
     <ClerkProvider
       isSatellite={process.env.NEXT_PUBLIC_CLERK_IS_SATELLITE === "true"}
-      domain={(url) => "jsconf.dev"}
-      // signInUrl={
-      //   process.env.NEXT_PUBLIC_SIGN_IN_URL
-      //     ? process.env.NEXT_PUBLIC_SIGN_IN_URL
-      //     : undefined
-      // }
+      // TODO: Esto no debería existir. Borrarlo cuando deployiemos a producción
+      domain={(url) => {
+        const splitted = url.host.split(".");
+        return [splitted.at(-2), splitted.at(-1)].join(".");
+      }}
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
     >
       {children}
