@@ -5,6 +5,7 @@ import { Clerk } from "../src/components/Auth/clerk";
 import { Toaster } from "../src/components/ui/toaster";
 import { Metadata } from "next";
 import { JSChileApolloProvider } from "../src/components/ApolloProvider";
+import { ShallowRoutingProvider } from "../src/components/Transitions/ShallowRoutingProvider";
 
 export async function generateMetadata({ params }): Promise<Metadata> {
   return {
@@ -49,24 +50,26 @@ export default function RootLayout({
   return (
     <Clerk>
       <JSChileApolloProvider>
-        <html lang="en">
-          <head>
-            <link rel="icon" href="/favicon.ico" />
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" />
-            <link
-              href="https://fonts.googleapis.com/css2?family=Koulen&display=swap"
-              rel="stylesheet"
-            />
-          </head>
-          <body className="dark antialiased h-[100dvh] w-[100dvw] flex flex-col overflow-hidden">
-            <Nav />
-            <div className="h-full overflow-auto relative flex flex-col">
-              {children}
-            </div>
-            <Toaster />
-          </body>
-        </html>
+        <ShallowRoutingProvider>
+          <html lang="en">
+            <head>
+              <link rel="icon" href="/favicon.ico" />
+              <link rel="preconnect" href="https://fonts.googleapis.com" />
+              <link rel="preconnect" href="https://fonts.gstatic.com" />
+              <link
+                href="https://fonts.googleapis.com/css2?family=Koulen&display=swap"
+                rel="stylesheet"
+              />
+            </head>
+            <body className="dark antialiased h-[100dvh] w-[100dvw] flex flex-col overflow-hidden">
+              <Nav />
+              <div className="h-full overflow-auto relative flex flex-col">
+                {children}
+              </div>
+              <Toaster />
+            </body>
+          </html>
+        </ShallowRoutingProvider>
       </JSChileApolloProvider>
     </Clerk>
   );

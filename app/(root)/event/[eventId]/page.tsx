@@ -5,6 +5,7 @@ import { urlForImage } from "../../../../src/lib/sanity";
 import { AnimatedNavigationCardLink } from "../../../../src/components/Transitions/AnimatedNavigationCardLink";
 import { AnimatedGridContainer } from "../../../../src/components/Transitions/AnimatedGridContainer";
 import { EventCard } from "../../../../src/components/EventCard";
+import { useRegisterRouteListener } from "../../../../src/components/Transitions/ShallowRoutingProvider";
 
 export default async function Page({
   params,

@@ -1,16 +1,15 @@
 interface LogoProps {
   color?: string;
-  size?: number;
+  className?: string;
 }
 
-export default function JSChileLogo({ color = "#000", size = 100 }: LogoProps) {
+export default function JSChileLogo({ color = "#000", className }: LogoProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox={`0 0 500 500`}
-      height={size}
-      width={size}
+      className={className}
     >
       <path
         fill={color}

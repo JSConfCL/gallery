@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Button } from "../../src/components/ui/button";
 import { API } from "../../src/gql/sanityApi";
 import { ImageParams, urlForImage } from "../../src/lib/sanity";
 import JSChileLogo from "../../src/components/Icons/JSChileLogo";
@@ -20,11 +19,11 @@ export default async function Page() {
   return (
     <main className="mx-auto max-w-[1960px] p-4 flex-1">
       <AnimatedGridContainer>
-        <div className="after:content relative flex flex-grow-0 row-span-1 md:row-span-2 flex-col items-center justify-end gap-4 overflow-hidden rounded-lg bg-jsconf-yellow px-6 pb-16 text-center text-white shadow-highlight after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight lg:pt-0">
+        <div className="after:content relative flex flex-grow-0 row-span-1 md:row-span-2 flex-col items-center justify-end gap-4 overflow-hidden rounded-lg bg-jsconf-yellow px-6 py-8 text-center text-white shadow-highlight after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight lg:pt-0">
           <div className="absolute inset-0 z-0 flex items-center justify-center opacity-20 pointer-events-none">
             <span className="absolute left-0 right-0 bottom-0 h-[400px] bg-gradient-to-b from-black/0 via-black to-black"></span>
           </div>
-          <JSChileLogo color="#000" size={150} />
+          <JSChileLogo color="#000" className="w-1/4 sm:w-1/2" />
           <h1 className="mt-8 mb-4 text-black font-bold uppercase tracking-widest font-koulen">
             JavaScript Chile
           </h1>
@@ -35,15 +34,6 @@ export default async function Page() {
               contacto@jschile.org
             </a>
           </p>
-          <Button asChild variant="secondary" className="pointer">
-            <a
-              href="https://github.com/JSConfCL/2023_images"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Github Repo
-            </a>
-          </Button>
         </div>
         {communityEvents.map(({ _id, title, eventType, image }) => {
           return (
@@ -54,14 +44,16 @@ export default async function Page() {
               className="after:content group relative block w-full cursor-pointer after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight"
             >
               <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-                <span className="absolute left-0 z-10 right-0 bottom-0 h-[50%] opacity-40 bg-gradient-to-b from-black/0 via-black to-black"></span>
-                <div className="absolute bottom-0 z-20 left-0 right-0 flex flex-col w-fill h-[50%] items-end justify-end">
-                  <h2 className="px-4 py-3 w-fill text-white/80 flex flex-col gap">
+                <span className="absolute left-0 z-10 right-0 bottom-0 h-[50%] "></span>
+                <div className="absolute bottom-0 text-white  z-20 left-0 right-0 flex gap-2 flex-col w-fill h-[50%] items-end justify-end">
+                  <h2 className="px-4 py-3 w-fill flex justify-center items-center bg-black/80 flex-col gap">
                     <span className="font-bold text-lg drop-shadow-md">
                       {eventType.title}
                     </span>
-                    <span className="font-bold drop-shadow-md">{title}</span>
                   </h2>
+                  <span className="px-4 py-2 flex justify-center items-center font-bold bg-black/80 drop-shadow-md">
+                    {title}
+                  </span>
                 </div>
               </div>
               <Image

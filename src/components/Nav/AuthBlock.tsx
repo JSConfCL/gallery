@@ -13,8 +13,11 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { ImportImagesLink } from "./ImportImagesLink";
+import { ErrorBoundary } from "../../features/import/errorBoundary";
+import { useRouter } from "next/navigation";
 
 export const AuthBlock = () => {
+  const router = useRouter();
   return (
     <div className="min-w-[4rem] flex justify-end">
       <SignedIn>
@@ -25,11 +28,26 @@ export const AuthBlock = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => {
+                  router.push("/user-profile");
+                }}
+              >
+                Mi Perfil
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <Suspense fallback={null}>
-                <ImportImagesLink />
+                <ErrorBoundary>
+                  <ImportImagesLink />
+                </ErrorBoundary>
               </Suspense>
               <SignOutButton>
                 <DropdownMenuItem className="cursor-pointer">
