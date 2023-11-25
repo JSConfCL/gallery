@@ -1,0 +1,6 @@
+query isSuperAdmin {
+  me {
+    id
+    isSuperAdmin
+  }
+}

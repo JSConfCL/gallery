@@ -1,0 +1,45 @@
+query eventImages($eventId: ID!, $where: EventImageFilter) {
+  EventInstance(id: $eventId) {
+    _id
+    title
+    startDate
+    endDate
+    mergedTitle
+    eventType {
+      _id
+      title
+      image {
+        asset {
+          _id
+          metadata {
+            lqip
+          }
+          assetId
+        }
+      }
+    }
+    image {
+      asset {
+        _id
+        metadata {
+          lqip
+        }
+        assetId
+      }
+    }
+  }
+  allEventImage(where: $where) {
+    _id
+    title
+    url
+    image {
+      asset {
+        _id
+        metadata {
+          lqip
+        }
+        assetId
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+query allEvents {
+  allEventInstance(where: { galleryEnabled: { eq: true } }) {
+    _id
+    title
+    startDate
+    endDate
+    url
+    bgColor
+    mergedTitle
+    image {
+      asset {
+        _id
+        metadata {
+          lqip
+          blurHash
+        }
+        assetId
+      }
+    }
+    eventType {
+      title
+      bgColor
+      image {
+        asset {
+          _id
+          assetId
+          metadata {
+            lqip
+          }
+        }
+      }
+    }
+  }
+}

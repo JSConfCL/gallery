@@ -1,0 +1,42 @@
+"use client";
+import { AnimatePresence, motion } from "framer-motion";
+import { useSelectedLayoutSegment } from "next/navigation";
+import { ElementRef, forwardRef } from "react";
+import FrozenRouter from "../../src/components/FrozenRouter";
+import { Footer } from "../../src/features/footer";
+import { ScrollArea } from "../../src/components/ui/scroll-area";
+import { useIsSuperAdminQuery } from "../../src/gql/jschileAPI";
+
+const Child = forwardRef<
+  ElementRef<typeof motion.div>,
+  { children: React.ReactNode }
+>((props, ref) => {
+  return (
+    <motion.div
+      ref={ref}
+      id="client-layout"
+      className="flex-1 flex flex-col overflow-hidden"
+      transition={{ duration: 0.2, delay: 0.2 }}
+      initial={{ opacity: 0, y: 33 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 33 }}
+    >
+      <ScrollArea className="flex flex-1">
+        <FrozenRouter>{props.children}</FrozenRouter>
+        <Footer />
+      </ScrollArea>
+    </motion.div>
+  );
+});
+
+Child.displayName = "Child";
+
+export default function TransitionLayout(props: { children: React.ReactNode }) {
+  const segment = useSelectedLayoutSegment();
+  useIsSuperAdminQuery();
+  return (
+    <AnimatePresence mode="popLayout" initial={false}>
+      <Child key={segment}>{props.children}</Child>
+    </AnimatePresence>
+  );
+}

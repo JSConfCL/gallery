@@ -1,17 +1,19 @@
+import { EventImagesQuery } from "../src/gql/graphql";
+
 /* eslint-disable no-unused-vars */
 export interface ImageProps {
   id: string;
   url: string;
   index: number;
-  blurDataUrl?: string
+  blurDataUrl?: string;
 }
 
 export interface SharedModalProps {
-  index: number
-  images?: ImageProps[]
-  currentPhoto?: ImageProps
-  changePhotoId: (newVal: number) => void
-  closeModal: () => void
-  navigation: boolean
-  direction?: number
+  index: number;
+  images?: (EventImagesQuery["allEventImage"][number] & { index: number })[];
+  currentPhoto?: EventImagesQuery["allEventImage"][number];
+  changePhotoId: (newVal: number) => void;
+  closeModal: () => void;
+  navigation: boolean;
+  direction?: number;
 }
