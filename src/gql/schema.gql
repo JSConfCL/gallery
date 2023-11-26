@@ -346,6 +346,9 @@ type EventImage implements Document {
   eventType: EventType
   externalId: String
   externalURL: String
+
+  """Habilita esta imagen para aparecer en la galería de imágenes"""
+  galleryEnabled: Boolean
   image: Image
   title: String
   url: String
@@ -364,6 +367,7 @@ input EventImageFilter {
   eventType: EventTypeFilter
   externalId: StringFilter
   externalURL: StringFilter
+  galleryEnabled: BooleanFilter
   image: ImageFilter
   title: StringFilter
   url: StringFilter
@@ -378,6 +382,7 @@ input EventImageSorting {
   _updatedAt: SortOrder
   externalId: SortOrder
   externalURL: SortOrder
+  galleryEnabled: SortOrder
   image: ImageSorting
   title: SortOrder
   url: SortOrder

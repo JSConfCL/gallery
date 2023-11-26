@@ -5,7 +5,6 @@ import { urlForImage } from "../../../../src/lib/sanity";
 import { AnimatedNavigationCardLink } from "../../../../src/components/Transitions/AnimatedNavigationCardLink";
 import { AnimatedGridContainer } from "../../../../src/components/Transitions/AnimatedGridContainer";
 import { EventCard } from "../../../../src/components/EventCard";
-import { useRegisterRouteListener } from "../../../../src/components/Transitions/ShallowRoutingProvider";
 
 export default async function Page({
   params,
@@ -21,6 +20,11 @@ export default async function Page({
         // propiedades de eventInstance, cuando solo necesita una.
         _id: {
           eq: eventId,
+        },
+        // @ts-expect-error los tipos estan mal, pide que le enviemos todas as
+        // propiedades de eventInstance, cuando solo necesita una.
+        galleryEnabled: {
+          eq: true,
         },
       },
     },

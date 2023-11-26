@@ -1,5 +1,5 @@
-query allEvents {
-  allEventInstance(where: { galleryEnabled: { eq: true } }) {
+query allEvents($where: EventInstanceFilter, $sort: [EventInstanceSorting!]) {
+  allEventInstance(where: $where, sort: $sort) {
     _id
     title
     startDate
