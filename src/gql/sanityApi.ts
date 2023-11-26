@@ -1,16 +1,15 @@
 import { GraphQLClient } from "graphql-request";
 import { getSdk } from "./graphqlRequest";
+import { sanityApiVersion, sanityDataset, sanityProjectId } from "../lib/env";
 
-const endpoint = `https://${
-  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? ""
-}.api.sanity.io/v2023-08-01/graphql/${
-  process.env.NEXT_PUBLIC_SANITY_DATASET ?? ""
-}/default${
-  process.env.APP_ENV === "production"
-    ? ""
-    : "?perspective=previewDrafts"
-}`;
+const isProd = process.env.APP_ENV === "production";
 
-export const API = getSdk(new GraphQLClient(endpoint, {
-  fetch,
-}));
+const endpoint = `https://${sanityProjectId}.${
+  isProd ? "api" : "apicdn"
+}.sanity.io/${sanityApiVersion}/graphql/${sanityDataset}/default`;
+
+export const API = getSdk(
+  new GraphQLClient(endpoint, {
+    fetch,
+  }),
+);

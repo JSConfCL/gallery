@@ -4,6 +4,7 @@ import { ImageParams, urlForImage } from "../../src/lib/sanity";
 import JSChileLogo from "../../src/components/Icons/JSChileLogo";
 import { AnimatedNavigationCardLink } from "../../src/components/Transitions/AnimatedNavigationCardLink";
 import { AnimatedGridContainer } from "../../src/components/Transitions/AnimatedGridContainer";
+import { SortOrder } from "../../src/gql/graphql";
 
 const imageConfig = {
   width: 720,
@@ -13,7 +14,16 @@ const imageConfig = {
   crop: "entropy",
 } satisfies ImageParams;
 export default async function Page() {
-  const data = await API.allEvents();
+  const data = await API.allEvents({
+    // @ts-expect-error los tipos estan mal, pide que le enviemos todas as
+    // propiedades de eventInstance, cuando solo necesita una.
+    where: { galleryEnabled: { eq: true } },
+    // @ts-expect-error los tipos estan mal, pide que le enviemos todas as
+    // propiedades de eventInstance, cuando solo necesita una.
+    sort: {
+      startDate: SortOrder.Desc,
+    },
+  });
   const communityEvents = data?.allEventInstance ?? [];
 
   return (
