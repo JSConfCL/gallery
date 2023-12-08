@@ -202,9 +202,9 @@ export default function SharedModal({
                     <a
                       href={urlForImage(currentImage.image, {
                         width: 4000,
-                        auto: "format",
+                        format: "jpg",
                         quality: 100,
-                        forceDownload: true,
+                        forceDownload: currentImage.title,
                       })}
                       className="rounded-full bg-black/50 p-2 text-white/75 backdrop-blur-lg transition hover:bg-black/75 hover:text-white"
                       target="_blank"

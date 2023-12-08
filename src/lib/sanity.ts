@@ -18,7 +18,7 @@ export type ImageParams = {
   height?: number;
   format?: ImageFormat;
   quality?: number;
-  forceDownload?: boolean;
+  forceDownload?: string;
   fit?: FitMode;
   crop?: CropMode;
   auto?: AutoMode;
@@ -51,7 +51,7 @@ export const urlForImage = (
       img = img.auto(params.auto);
     }
     if (params.forceDownload) {
-      img = img.forceDownload(true);
+      img = img.forceDownload(params.forceDownload);
     }
     return img.url();
   }
