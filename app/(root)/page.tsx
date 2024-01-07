@@ -16,15 +16,15 @@ const imageConfig = {
 export default async function Page() {
   const data = await API.allEvents({
     // @ts-expect-error los tipos estan mal, pide que le enviemos todas as
-    // propiedades de eventInstance, cuando solo necesita una.
+    // propiedades de Event, cuando solo necesita una.
     where: { galleryEnabled: { eq: true } },
     // @ts-expect-error los tipos estan mal, pide que le enviemos todas as
-    // propiedades de eventInstance, cuando solo necesita una.
+    // propiedades de Event, cuando solo necesita una.
     sort: {
       startDate: SortOrder.Desc,
     },
   });
-  const communityEvents = data?.allEventInstance ?? [];
+  const communityEvents = data?.allEvent ?? [];
 
   return (
     <main className="mx-auto max-w-[1960px] p-4 flex-1">
@@ -45,7 +45,7 @@ export default async function Page() {
             </a>
           </p>
         </div>
-        {communityEvents.map(({ _id, title, eventType, image }) => {
+        {communityEvents.map(({ _id, title, project, image }) => {
           return (
             <AnimatedNavigationCardLink
               id={_id}
@@ -58,7 +58,7 @@ export default async function Page() {
                 <div className="absolute bottom-0 text-white  z-20 left-0 right-0 flex gap-2 flex-col w-fill h-[50%] items-end justify-end">
                   <h2 className="px-4 py-3 w-fill flex justify-center items-center bg-black/80 flex-col gap">
                     <span className="font-bold text-lg drop-shadow-md">
-                      {eventType.title}
+                      {project.title}
                     </span>
                   </h2>
                   <span className="px-4 py-2 flex justify-center items-center font-bold bg-black/80 drop-shadow-md">
@@ -71,9 +71,9 @@ export default async function Page() {
                 className="transform rounded-lg brightness-90 z-0 transition will-change-auto group-hover:brightness-110"
                 style={{ transform: "translate3d(0, 0, 0)" }}
                 placeholder="blur"
-                blurDataURL={eventType.image.asset.metadata.lqip}
+                blurDataURL={project.image.asset.metadata.lqip}
                 id={_id}
-                src={urlForImage(image ?? eventType.image, imageConfig)}
+                src={urlForImage(image ?? project.image, imageConfig)}
                 width={720}
                 height={480}
                 sizes="(max-width: 640px) 25w,

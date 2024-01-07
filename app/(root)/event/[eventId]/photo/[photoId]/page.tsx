@@ -56,8 +56,8 @@ export default async function Page({
   const data = await API.eventImages({
     eventId,
     where: {
-      eventInstance: {
-        // @ts-expect-error los tipos estan mal, pide que le enviemos todas as propiedades de eventInstance, cuando solo necesita una
+      event: {
+        // @ts-expect-error los tipos estan mal, pide que le enviemos todas as propiedades de Event, cuando solo necesita una
         _id: {
           eq: eventId,
         },

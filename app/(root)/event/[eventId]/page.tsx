@@ -15,14 +15,14 @@ export default async function Page({
   const data = await API.eventImages({
     eventId,
     where: {
-      eventInstance: {
+      event: {
         // @ts-expect-error los tipos estan mal, pide que le enviemos todas as
-        // propiedades de eventInstance, cuando solo necesita una.
+        // propiedades de Event, cuando solo necesita una.
         _id: {
           eq: eventId,
         },
         // @ts-expect-error los tipos estan mal, pide que le enviemos todas as
-        // propiedades de eventInstance, cuando solo necesita una.
+        // propiedades de Event, cuando solo necesita una.
         galleryEnabled: {
           eq: true,
         },
@@ -35,11 +35,11 @@ export default async function Page({
     index,
   }));
 
-  const eventName = data.EventInstance.eventType.title
-    ? `${data.EventInstance.eventType.title} ${data.EventInstance.title}`
-    : data.EventInstance.eventType.title;
+  const eventName = data.Event.project.title
+    ? `${data.Event.project.title} ${data.Event.title}`
+    : data.Event.project.title;
 
-  const image = data.EventInstance.image ?? data.EventInstance.eventType.image;
+  const image = data.Event.image ?? data.Event.project.image;
 
   return (
     <main className="mx-auto max-w-[1960px] p-4">

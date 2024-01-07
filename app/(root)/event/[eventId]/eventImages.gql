@@ -1,11 +1,11 @@
 query eventImages($eventId: ID!, $where: EventImageFilter) {
-  EventInstance(id: $eventId) {
+  Event(id: $eventId) {
     _id
     title
     startDate
     endDate
     mergedTitle
-    eventType {
+    project {
       _id
       title
       image {
