@@ -389,8 +389,8 @@ type EventImage implements Document {
   """Date the document was last modified"""
   _updatedAt: DateTime
   event: Event
-  eventInstance: EventInstance
-  eventType: EventType
+  event: Event
+  project: Project
   externalId: String
   externalURL: String
 
@@ -411,8 +411,7 @@ input EventImageFilter {
   _type: StringFilter
   _updatedAt: DatetimeFilter
   event: EventFilter
-  eventInstance: EventInstanceFilter
-  eventType: EventTypeFilter
+  project: ProjectFilter
   externalId: StringFilter
   externalURL: StringFilter
   galleryEnabled: BooleanFilter
@@ -436,7 +435,7 @@ input EventImageSorting {
   url: SortOrder
 }
 
-type EventInstance implements Document {
+type Event implements Document {
   """Date the document was created"""
   _createdAt: DateTime
 
@@ -454,7 +453,7 @@ type EventInstance implements Document {
   _updatedAt: DateTime
   bgColor: String
   endDate: Date
-  eventType: EventType
+  project: Project
 
   """Habilita este evento para aparecer en la galería de imágenes"""
   galleryEnabled: Boolean
@@ -465,7 +464,7 @@ type EventInstance implements Document {
   url: String
 }
 
-input EventInstanceFilter {
+input EventFilter {
   """Apply filters on document level"""
   _: Sanity_DocumentFilter
   _createdAt: DatetimeFilter
@@ -476,7 +475,7 @@ input EventInstanceFilter {
   _updatedAt: DatetimeFilter
   bgColor: StringFilter
   endDate: DateFilter
-  eventType: EventTypeFilter
+  project: ProjectFilter
   galleryEnabled: BooleanFilter
   image: ImageFilter
   mergedTitle: BooleanFilter
@@ -485,7 +484,7 @@ input EventInstanceFilter {
   url: StringFilter
 }
 
-input EventInstanceSorting {
+input EventSorting {
   _createdAt: SortOrder
   _id: SortOrder
   _key: SortOrder
@@ -524,7 +523,7 @@ enum EventStatus {
   inactive
 }
 
-type EventType implements Document {
+type Project implements Document {
   """Date the document was created"""
   _createdAt: DateTime
 
@@ -545,7 +544,7 @@ type EventType implements Document {
   title: String
 }
 
-input EventTypeFilter {
+input ProjectFilter {
   """Apply filters on document level"""
   _: Sanity_DocumentFilter
   _createdAt: DatetimeFilter
@@ -559,7 +558,7 @@ input EventTypeFilter {
   title: StringFilter
 }
 
-input EventTypeSorting {
+input ProjectSorting {
   _createdAt: SortOrder
   _id: SortOrder
   _key: SortOrder
@@ -885,14 +884,14 @@ type RootQuery {
     """EventImage document ID"""
     id: ID!
   ): EventImage
-  EventInstance(
-    """EventInstance document ID"""
+  Event(
+    """Event document ID"""
     id: ID!
-  ): EventInstance
-  EventType(
-    """EventType document ID"""
+  ): Event
+  Project(
+    """Project document ID"""
     id: ID!
-  ): EventType
+  ): Project
   Project(
     """Project document ID"""
     id: ID!
@@ -945,24 +944,24 @@ type RootQuery {
     sort: [EventImageSorting!]
     where: EventImageFilter
   ): [EventImage!]!
-  allEventInstance(
+  allEvent(
     """Max documents to return"""
     limit: Int
 
     """Offset at which to start returning documents from"""
     offset: Int
-    sort: [EventInstanceSorting!]
-    where: EventInstanceFilter
-  ): [EventInstance!]!
-  allEventType(
+    sort: [EventSorting!]
+    where: EventFilter
+  ): [Event!]!
+  allProject(
     """Max documents to return"""
     limit: Int
 
     """Offset at which to start returning documents from"""
     offset: Int
-    sort: [EventTypeSorting!]
-    where: EventTypeFilter
-  ): [EventType!]!
+    sort: [ProjectSorting!]
+    where: ProjectFilter
+  ): [Project!]!
   allProject(
     """Max documents to return"""
     limit: Int

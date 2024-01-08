@@ -296,7 +296,7 @@ export const Importer = ({
                     variables: {
                       input: {
                         albumId: selectedAlbum,
-                        sanityEventInstanceId: selectedSanityEvent,
+                        sanityEventId: selectedSanityEvent,
                         token: hiddenToken,
                       },
                     },
