@@ -1,7 +1,11 @@
 import type { IGraphQLConfig } from "graphql-config";
+import { loadEnvConfig } from "@next/env";
 
-const projectId = "t2zgeg0i";
-const dataset = "migration";
+loadEnvConfig(process.cwd());
+
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET
+
 export const sanityURL = `https://${projectId}.api.sanity.io/v1/graphql/${dataset}/default`;
 export const jsChileURL = `https://graphql-api.jsconfcl.workers.dev/graphql`;
 export const localSchema = `./src/gql/schema.gql`;
