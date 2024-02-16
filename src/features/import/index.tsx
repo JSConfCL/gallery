@@ -11,7 +11,7 @@ import { Button } from "../../components/ui/button";
 const ImportImpl = ({
   communityEvents,
 }: {
-  communityEvents: AllEventsQuery["allEventInstance"];
+  communityEvents: AllEventsQuery["allEvent"];
 }) => {
   const router = useRouter();
   const superAdminQuery = useIsSuperAdminSuspenseQuery();
@@ -36,7 +36,7 @@ const ImportImpl = ({
 export const Import = ({
   communityEvents,
 }: {
-  communityEvents: AllEventsQuery["allEventInstance"];
+  communityEvents: AllEventsQuery["allEvent"];
 }) => {
   const pathname = usePathname();
   const [redirectUrl, setRedirectUrl] = useState("");

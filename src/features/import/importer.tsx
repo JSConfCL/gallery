@@ -45,7 +45,7 @@ const useGetAlbums = () => () =>
 export const Importer = ({
   communityEvents,
 }: {
-  communityEvents: AllEventsQuery["allEventInstance"];
+  communityEvents: AllEventsQuery["allEvent"];
 }) => {
   const [hiddenToken, setHiddenToken] = useState("");
   const [token, setToken] = useState("");
@@ -244,12 +244,12 @@ export const Importer = ({
               {communityEvents.map((event) => (
                 <Card key={event._id} className="w-80 h-96">
                   <CardHeader className="text-bold">
-                    {event.eventType.title + " — " + event.title ||
+                    {event.project.title + " — " + event.title ||
                       event.mergedTitle}
                   </CardHeader>
                   <CardContent className="flex flex-col gap-4">
                     <img
-                      src={urlForImage(event?.image ?? event.eventType.image)}
+                      src={urlForImage(event?.image ?? event.project.image)}
                       className="w-full h-52 object-cover"
                     />
                     <div>

@@ -1,5 +1,5 @@
-query allEvents($where: EventInstanceFilter, $sort: [EventInstanceSorting!]) {
-  allEventInstance(where: $where, sort: $sort) {
+query allEvents($where: EventFilter, $sort: [EventSorting!]) {
+  allEvent(where: $where, sort: $sort) {
     _id
     title
     startDate
@@ -17,7 +17,7 @@ query allEvents($where: EventInstanceFilter, $sort: [EventInstanceSorting!]) {
         assetId
       }
     }
-    eventType {
+    project {
       title
       bgColor
       image {
