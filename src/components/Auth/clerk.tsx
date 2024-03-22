@@ -13,12 +13,9 @@ export const Clerk = ({ children }: Props) => {
       localization={{
         locale: "es-ES",
       }}
-      isSatellite={process.env.NEXT_PUBLIC_CLERK_IS_SATELLITE === "true"}
+      isSatellite={Boolean(process.env.NEXT_PUBLIC_CLERK_URL)}
       // TODO: Esto no debería existir. Borrarlo cuando deployiemos a producción
-      domain={(url) => {
-        const splitted = url.host.split(".");
-        return [splitted.at(-2), splitted.at(-1)].join(".");
-      }}
+      domain={process.env.NEXT_PUBLIC_CLERK_URL}
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
     >
       {children}
