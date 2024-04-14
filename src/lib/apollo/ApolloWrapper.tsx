@@ -1,23 +1,12 @@
 "use client";
 import {
-  ApolloLink,
-  HttpLink,
-  ApolloProvider,
   ApolloClient,
+  ApolloProvider,
+  HttpLink,
   InMemoryCache,
 } from "@apollo/client";
-import cookies from "js-cookie";
-import { COOKIE_NAME } from "../supabase/client";
 
 function useMakeClient() {
-  const cookieValue = cookies.get(COOKIE_NAME) ?? "";
-  const headers = cookieValue
-    ? {
-        headers: {
-          Authorization: `Bearer ${cookieValue}`,
-        },
-      }
-    : {};
   const httpLink = new HttpLink({
     // this needs to be an absolute url, as relative urls cannot be used in SSR
     uri: process.env.NEXT_PUBLIC_JSCL_API_URL,
@@ -25,7 +14,7 @@ function useMakeClient() {
     // (this does not work if you are rendering your page with `export const dynamic = "force-static"`)
     // fetchOptions: { cache: "no-store" },
     credentials: "include",
-    ...headers,
+    // ...headers,
     // you can override the default `fetchOptions` on a per query basis
     // via the `context` property on the options passed as a second argument
     // to an Apollo Client data fetching hook, e.g.:

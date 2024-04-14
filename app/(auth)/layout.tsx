@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Button } from "../../src/components/ui/button";
@@ -7,7 +8,6 @@ import {
   useIsAuthReady,
   useIsLoggedIn,
 } from "../../src/lib/supabase/AuthProvider";
-import Link from "next/link";
 
 export default function AuthLayout({
   children,
