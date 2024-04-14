@@ -27,6 +27,7 @@ export type Scalars = {
 export type AllowedCurrency = {
   currency: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  validPaymentMethods: ValidPaymentMethods;
 };
 
 export enum CommnunityStatus {
@@ -64,6 +65,14 @@ export enum CompanyStatus {
   Inactive = 'inactive'
 }
 
+/** Representation of a consolidated payment entry log calculation */
+export type ConsolidatedPaymentLogEntry = {
+  currencyId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  platform: Scalars['String']['output'];
+  totalTransactionAmount: Scalars['Float']['output'];
+};
+
 export type CreateCommunityInput = {
   description: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -85,14 +94,20 @@ export type CreateSalaryInput = {
   companyId: Scalars['String']['input'];
   confirmationToken: Scalars['String']['input'];
   countryCode: Scalars['String']['input'];
-  currencyId: Scalars['String']['input'];
+  currencyCode: Scalars['String']['input'];
   gender: Gender;
   genderOtherText: Scalars['String']['input'];
   typeOfEmployment: TypeOfEmployment;
   workMetodology: WorkMetodology;
-  workRoleId: Scalars['String']['input'];
+  workSeniorityAndRoleId: Scalars['String']['input'];
   yearsOfExperience: Scalars['Int']['input'];
 };
+
+export enum EmailStatus {
+  Confirmed = 'confirmed',
+  Pending = 'pending',
+  Rejected = 'rejected'
+}
 
 export type EnqueueGoogleAlbumImportInput = {
   albumId: Scalars['String']['input'];
@@ -107,6 +122,7 @@ export type Event = {
   description: Maybe<Scalars['String']['output']>;
   endDateTime: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['String']['output'];
+  images: Array<SanityAssetRef>;
   latitude: Maybe<Scalars['String']['output']>;
   longitude: Maybe<Scalars['String']['output']>;
   maxAttendees: Maybe<Scalars['Int']['output']>;
@@ -115,14 +131,17 @@ export type Event = {
   startDateTime: Scalars['DateTime']['output'];
   status: EventStatus;
   tags: Array<Tag>;
-  tickets: Array<UserTicket>;
+  /** List of tickets for sale or redemption for this event. (If you are looking for a user's tickets, use the usersTickets field) */
+  tickets: Array<Ticket>;
   users: Array<User>;
+  /** List of tickets that a user owns for this event. */
+  usersTickets: Array<UserTicket>;
   visibility: EventVisibility;
 };
 
 
 /** Representation of an Event (Events and Users, is what tickets are linked to) */
-export type EventTicketsArgs = {
+export type EventUsersTicketsArgs = {
   input: InputMaybe<EventsTicketsSearchInput>;
 };
 
@@ -140,6 +159,27 @@ export type EventCreateInput = {
   status: InputMaybe<EventStatus>;
   timeZone: InputMaybe<Scalars['String']['input']>;
   visibility: InputMaybe<EventVisibility>;
+};
+
+export type EventEditInput = {
+  address: InputMaybe<Scalars['String']['input']>;
+  description: InputMaybe<Scalars['String']['input']>;
+  endDateTime: InputMaybe<Scalars['DateTime']['input']>;
+  eventId: Scalars['String']['input'];
+  latitude: InputMaybe<Scalars['String']['input']>;
+  longitude: InputMaybe<Scalars['String']['input']>;
+  maxAttendees: InputMaybe<Scalars['Int']['input']>;
+  meetingURL: InputMaybe<Scalars['String']['input']>;
+  name: InputMaybe<Scalars['String']['input']>;
+  startDateTime: InputMaybe<Scalars['DateTime']['input']>;
+  status: InputMaybe<EventStatus>;
+  timeZone: InputMaybe<Scalars['String']['input']>;
+  visibility: InputMaybe<EventVisibility>;
+};
+
+/** Search for tags */
+export type EventImageSearch = {
+  eventId: Scalars['String']['input'];
 };
 
 export enum EventStatus {
@@ -189,6 +229,8 @@ export type Mutation = {
   approvalUserTicket: UserTicket;
   /** Cancel a ticket */
   cancelUserTicket: UserTicket;
+  /** Attempt to claim a certain ammount of tickets */
+  claimUserTicket: RedeemUserTicketResponse;
   /** Create an community */
   createCommunity: Community;
   /** Create a company */
@@ -197,12 +239,18 @@ export type Mutation = {
   createEvent: Event;
   /** Create a salary */
   createSalary: Salary;
+  /** Create a ticket */
+  createTicket: Ticket;
   /** Edit an community */
   editCommunity: Community;
+  /** Edit an event */
+  editEvent: Event;
   /** Edit a ticket */
   editTicket: Ticket;
   /** Enqueue images to import */
   enqueueGoogleAlbumImport: Scalars['Boolean']['output'];
+  /** Create a purchase order */
+  payForPurchaseOrder: PurchaseOrder;
   /** Redeem a ticket */
   redeemUserTicket: UserTicket;
   /** Kickoff the email validation flow. This flow will links an email to a user, create a company if it does not exist, and allows filling data for that email's position */
@@ -230,6 +278,11 @@ export type MutationCancelUserTicketArgs = {
 };
 
 
+export type MutationClaimUserTicketArgs = {
+  input: TicketClaimInput;
+};
+
+
 export type MutationCreateCommunityArgs = {
   input: CreateCommunityInput;
 };
@@ -250,8 +303,18 @@ export type MutationCreateSalaryArgs = {
 };
 
 
+export type MutationCreateTicketArgs = {
+  input: TicketCreateInput;
+};
+
+
 export type MutationEditCommunityArgs = {
   input: UpdateCommunityInput;
+};
+
+
+export type MutationEditEventArgs = {
+  input: EventEditInput;
 };
 
 
@@ -262,6 +325,11 @@ export type MutationEditTicketArgs = {
 
 export type MutationEnqueueGoogleAlbumImportArgs = {
   input: EnqueueGoogleAlbumImportInput;
+};
+
+
+export type MutationPayForPurchaseOrderArgs = {
+  input: PayForPurchaseOrderInput;
 };
 
 
@@ -307,6 +375,56 @@ export type MyTicketsSearchInput = {
   status: InputMaybe<TicketStatus>;
 };
 
+export type PayForPurchaseOrderInput = {
+  currencyID: Scalars['String']['input'];
+  purchaseOrderId: Scalars['String']['input'];
+};
+
+/** Representation of a TicketPrice */
+export type Price = {
+  amount: Scalars['Int']['output'];
+  currency: AllowedCurrency;
+  id: Scalars['ID']['output'];
+};
+
+export type PricingInputField = {
+  currencyId: Scalars['String']['input'];
+  /** The price. But in cents, so for a $10 ticket, you'd pass 1000 (or 10_00), or for 1000 chilean pesos, you'd pass 1000_00 */
+  value_in_cents: Scalars['Int']['input'];
+};
+
+/** Representation of a payment log entry */
+export type PublicFinanceEntryRef = {
+  createdAt: Scalars['DateTime']['output'];
+  currencyId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  platform: Scalars['String']['output'];
+  transactionAmount: Scalars['Float']['output'];
+  transactionDate: Maybe<Scalars['DateTime']['output']>;
+};
+
+/** Representation of a Purchase Order */
+export type PurchaseOrder = {
+  currency: Maybe<AllowedCurrency>;
+  finalPrice: Maybe<Scalars['Float']['output']>;
+  id: Scalars['ID']['output'];
+  paymentLink: Maybe<Scalars['String']['output']>;
+  status: Maybe<PurchaseOrderStatusEnum>;
+  tickets: Array<UserTicket>;
+};
+
+export type PurchaseOrderInput = {
+  quantity: Scalars['Int']['input'];
+  ticketId: Scalars['String']['input'];
+};
+
+export enum PurchaseOrderStatusEnum {
+  Cancelled = 'cancelled',
+  NotRequired = 'not_required',
+  Paid = 'paid',
+  Unpaid = 'unpaid'
+}
+
 export type Query = {
   /** Get a list of communities. Filter by name, id, or status */
   communities: Array<Community>;
@@ -318,12 +436,20 @@ export type Query = {
   company: Company;
   /** Get an event by id */
   event: Maybe<Event>;
+  /** Get a list of images, that are attached to an event */
+  eventImages: Array<SanityAssetRef>;
   /** Get a list of events. Filter by name, id, status or date */
   events: Array<Event>;
   /** Get the current user */
   me: User;
   /** Get a list of tickets for the current user */
   myTickets: Array<UserTicket>;
+  /** Get a list of salaries associated to the user */
+  salaries: Array<Salary>;
+  /** Search a consolidated payment logs, by date, aggregated by platform and currency_id */
+  searchConsolidatedPaymentLogs: Array<ConsolidatedPaymentLogEntry>;
+  /** Search on the payment logs by date, and returns a list of payment logs */
+  searchPaymentLogs: Array<PublicFinanceEntryRef>;
   status: Scalars['String']['output'];
   /** Get a list of tags */
   tags: Array<Tag>;
@@ -333,6 +459,12 @@ export type Query = {
   users: Array<User>;
   /** Get a workEmail and check if its validated for this user */
   workEmail: WorkEmail;
+  /** Get a list of validated work emails for the user */
+  workEmails: Array<ValidatedWorkEmail>;
+  /** Get a a work role's seniorities */
+  workRoleSeniorities: Array<WorkSeniority>;
+  /** Get a list of possible work roles */
+  workRoles: Array<WorkRole>;
 };
 
 
@@ -363,6 +495,11 @@ export type QueryEventArgs = {
 };
 
 
+export type QueryEventImagesArgs = {
+  input: EventImageSearch;
+};
+
+
 export type QueryEventsArgs = {
   input: InputMaybe<EventsSearchInput>;
 };
@@ -370,6 +507,16 @@ export type QueryEventsArgs = {
 
 export type QueryMyTicketsArgs = {
   input: InputMaybe<MyTicketsSearchInput>;
+};
+
+
+export type QuerySearchConsolidatedPaymentLogsArgs = {
+  input: SearchPaymentLogsInput;
+};
+
+
+export type QuerySearchPaymentLogsArgs = {
+  input: SearchPaymentLogsInput;
 };
 
 
@@ -392,18 +539,31 @@ export type QueryWorkEmailArgs = {
   email: Scalars['String']['input'];
 };
 
+
+export type QueryWorkRoleSenioritiesArgs = {
+  input: WorkRoleSenioritiesInput;
+};
+
+export type RedeemUserTicketError = {
+  error: Scalars['Boolean']['output'];
+  errorMessage: Scalars['String']['output'];
+};
+
+export type RedeemUserTicketResponse = PurchaseOrder | RedeemUserTicketError;
+
 /** Representation of a workEmail */
 export type Salary = {
   amount: Scalars['Int']['output'];
   company: Company;
   countryCode: Scalars['String']['output'];
-  currency: AllowedCurrency;
+  currencyCode: Scalars['String']['output'];
   gender: Maybe<Gender>;
   genderOtherText: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   typeOfEmployment: TypeOfEmployment;
   workMetodology: WorkMetodology;
   workRole: WorkRole;
+  workSeniority: WorkSeniority;
   yearsOfExperience: Scalars['Int']['output'];
 };
 
@@ -422,6 +582,11 @@ export type SearchCompaniesInput = {
   description: InputMaybe<Scalars['String']['input']>;
   domain: InputMaybe<Scalars['String']['input']>;
   website: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SearchPaymentLogsInput = {
+  endDate: InputMaybe<Scalars['DateTime']['input']>;
+  startDate: Scalars['DateTime']['input'];
 };
 
 export enum SearchableUserTags {
@@ -446,15 +611,19 @@ export type TagSearchInput = {
 
 /** Representation of a ticket */
 export type Ticket = {
-  currencyId: Maybe<Scalars['String']['output']>;
   description: Maybe<Scalars['String']['output']>;
   endDateTime: Maybe<Scalars['DateTime']['output']>;
   eventId: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  /** Whether or not the ticket is free */
+  isFree: Scalars['Boolean']['output'];
+  /** Whether or not the ticket has an unlimited quantity. This is reserved for things loike online events. */
+  isUnlimited: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
-  price: Maybe<Scalars['Int']['output']>;
+  prices: Maybe<Array<Price>>;
+  /** The number of tickets available for this ticket type */
   quantity: Maybe<Scalars['Int']['output']>;
-  requiresApproval: Maybe<Scalars['Boolean']['output']>;
+  requiresApproval: Scalars['Boolean']['output'];
   startDateTime: Scalars['DateTime']['output'];
   status: TicketTemplateStatus;
   visibility: TicketTemplateVisibility;
@@ -462,25 +631,53 @@ export type Ticket = {
 
 export enum TicketApprovalStatus {
   Approved = 'approved',
-  Pending = 'pending'
+  NotRequired = 'not_required',
+  Pending = 'pending',
+  Rejected = 'rejected'
 }
 
+export type TicketClaimInput = {
+  /** A unique key to prevent duplicate requests, it's optional to send, but it's recommended to send it to prevent duplicate requests. If not sent, it will be created by the server. */
+  idempotencyUUIDKey: InputMaybe<Scalars['String']['input']>;
+  purchaseOrder: Array<PurchaseOrderInput>;
+};
+
+export type TicketCreateInput = {
+  description: InputMaybe<Scalars['String']['input']>;
+  endDateTime: InputMaybe<Scalars['DateTime']['input']>;
+  eventId: Scalars['String']['input'];
+  /** If the ticket is free, the price submitted will be ignored. */
+  isFree: Scalars['Boolean']['input'];
+  name: Scalars['String']['input'];
+  prices: InputMaybe<Array<PricingInputField>>;
+  quantity: InputMaybe<Scalars['Int']['input']>;
+  requiresApproval: InputMaybe<Scalars['Boolean']['input']>;
+  startDateTime: Scalars['DateTime']['input'];
+  status: InputMaybe<TicketTemplateStatus>;
+  /** If provided, quantity must not be passed. This is for things like online events where there is no limit to the amount of tickets that can be sold. */
+  unlimitedTickets: Scalars['Boolean']['input'];
+  visibility: InputMaybe<TicketTemplateVisibility>;
+};
+
 export type TicketEditInput = {
-  currencyId: InputMaybe<Scalars['String']['input']>;
   description: InputMaybe<Scalars['String']['input']>;
   endDateTime: InputMaybe<Scalars['DateTime']['input']>;
   eventId: InputMaybe<Scalars['String']['input']>;
   name: InputMaybe<Scalars['String']['input']>;
-  price: InputMaybe<Scalars['Int']['input']>;
+  prices: InputMaybe<PricingInputField>;
   quantity: InputMaybe<Scalars['Int']['input']>;
   requiresApproval: InputMaybe<Scalars['Boolean']['input']>;
   startDateTime: InputMaybe<Scalars['DateTime']['input']>;
   status: InputMaybe<TicketTemplateStatus>;
   ticketId: Scalars['String']['input'];
+  /** If provided, quantity must not be passed. This is for things like online events where there is no limit to the amount of tickets that can be sold. */
+  unlimitedTickets: InputMaybe<Scalars['Boolean']['input']>;
   visibility: InputMaybe<TicketTemplateVisibility>;
 };
 
 export enum TicketPaymentStatus {
+  Cancelled = 'cancelled',
+  NotRequired = 'not_required',
   Paid = 'paid',
   Unpaid = 'unpaid'
 }
@@ -492,7 +689,8 @@ export enum TicketRedemptionStatus {
 
 export enum TicketStatus {
   Active = 'active',
-  Cancelled = 'cancelled'
+  Expired = 'expired',
+  Inactive = 'inactive'
 }
 
 export enum TicketTemplateStatus {
@@ -530,18 +728,17 @@ export type UpdateCompanyInput = {
 };
 
 export type UpdateSalaryInput = {
-  amount: Scalars['Int']['input'];
-  companyId: Scalars['String']['input'];
+  amount: InputMaybe<Scalars['Int']['input']>;
   confirmationToken: Scalars['String']['input'];
-  countryCode: Scalars['String']['input'];
-  currencyId: Scalars['String']['input'];
-  gender: Gender;
-  genderOtherText: Scalars['String']['input'];
+  countryCode: InputMaybe<Scalars['String']['input']>;
+  currencyCode: InputMaybe<Scalars['String']['input']>;
+  gender: InputMaybe<Gender>;
+  genderOtherText: InputMaybe<Scalars['String']['input']>;
   salaryId: Scalars['String']['input'];
-  typeOfEmployment: TypeOfEmployment;
-  workMetodology: WorkMetodology;
-  workRoleId: Scalars['String']['input'];
-  yearsOfExperience: Scalars['Int']['input'];
+  typeOfEmployment: InputMaybe<TypeOfEmployment>;
+  workMetodology: InputMaybe<WorkMetodology>;
+  workSeniorityAndRoleId: InputMaybe<Scalars['String']['input']>;
+  yearsOfExperience: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** Representation of a user */
@@ -564,7 +761,22 @@ export type UserTicket = {
   status: TicketStatus;
 };
 
-/** Representation of a workEmail */
+export enum ValidPaymentMethods {
+  MercadoPago = 'mercado_pago',
+  Stripe = 'stripe'
+}
+
+/** Representation of a work email associated to the current user */
+export type ValidatedWorkEmail = {
+  company: Maybe<Company>;
+  confirmationDate: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  isValidated: Scalars['Boolean']['output'];
+  status: EmailStatus;
+  workEmail: Scalars['String']['output'];
+};
+
+/** Representation of a (yet to validate) work email */
 export type WorkEmail = {
   id: Scalars['String']['output'];
   isValidated: Scalars['Boolean']['output'];
@@ -576,12 +788,23 @@ export enum WorkMetodology {
   Remote = 'remote'
 }
 
-/** Representation of a workEmail */
+/** Representation of a work role */
 export type WorkRole = {
-  description: Scalars['String']['output'];
+  description: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
-  seniority: Scalars['String']['output'];
+  seniorities: Array<WorkSeniority>;
+};
+
+export type WorkRoleSenioritiesInput = {
+  workRoleId: Scalars['String']['input'];
+};
+
+/** Representation of a work seniority */
+export type WorkSeniority = {
+  description: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type UpdateUserRoleInCommunityInput = {

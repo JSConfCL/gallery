@@ -1,25 +1,37 @@
 "use client";
-import { SignInButton, SignedIn, SignedOut } from "@clerk/clerk-react";
-import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Button } from "../../src/components/ui/button";
 import { ErrorBoundary } from "../../src/features/import/errorBoundary";
+import {
+  useIsAuthReady,
+  useIsLoggedIn,
+} from "../../src/lib/supabase/AuthProvider";
 
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
+  const isAuthReady = useIsAuthReady();
+  const isLoggedIn = useIsLoggedIn();
   const [redirectUrl, setRedirectUrl] = useState("");
   const router = useRouter();
   useEffect(() => {
     setRedirectUrl(window.location.host);
   }, []);
 
+  if (!isAuthReady) {
+    return null;
+  }
+
+  if (!isLoggedIn) {
+  }
+
   return (
     <main className="mx-auto max-w-5xl p-4">
-      <SignedIn>
+      {isLoggedIn && (
         <Suspense>
           <ErrorBoundary
             onError={() => {
@@ -29,22 +41,12 @@ export default function AuthLayout({
             {children}
           </ErrorBoundary>
         </Suspense>
-      </SignedIn>
-      <SignedOut>
-        {process.env.NEXT_PUBLIC_SIGN_IN_URL ? (
-          <Button asChild variant="secondary">
-            <a
-              href={`${process.env.NEXT_PUBLIC_SIGN_IN_URL}?redirect_url=https://${redirectUrl}`}
-            >
-              Ingresar
-            </a>
-          </Button>
-        ) : (
-          <SignInButton mode="modal" redirectUrl={pathname}>
-            <Button variant="secondary">Ingresar</Button>
-          </SignInButton>
-        )}
-      </SignedOut>
+      )}
+      {!isLoggedIn && (
+        <Button asChild variant="secondary">
+          <Link href="/login">Ingresar</Link>
+        </Button>
+      )}
     </main>
   );
 }
