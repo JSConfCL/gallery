@@ -1,11 +1,11 @@
 import React from "react";
 import "./globals.css";
 import { Nav } from "../src/components/Nav";
-import { Clerk } from "../src/components/Auth/clerk";
 import { Toaster } from "../src/components/ui/toaster";
 import { Metadata } from "next";
-import { JSChileApolloProvider } from "../src/components/ApolloProvider";
+import { ApolloWrapper } from "../src/lib/apollo/ApolloWrapper";
 import { ShallowRoutingProvider } from "../src/components/Transitions/ShallowRoutingProvider";
+import { AuthProvider } from "../src/lib/supabase/AuthProvider";
 
 export async function generateMetadata({ params }): Promise<Metadata> {
   return {
@@ -48,9 +48,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Clerk>
-      <JSChileApolloProvider>
-        <ShallowRoutingProvider>
+    <ApolloWrapper>
+      <ShallowRoutingProvider>
+        <AuthProvider>
           <html lang="en">
             <head>
               <link rel="icon" href="/favicon.ico" />
@@ -69,9 +69,9 @@ export default function RootLayout({
               <Toaster />
             </body>
           </html>
-        </ShallowRoutingProvider>
-      </JSChileApolloProvider>
-    </Clerk>
+        </AuthProvider>
+      </ShallowRoutingProvider>
+    </ApolloWrapper>
   );
 }
 

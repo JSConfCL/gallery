@@ -389,14 +389,13 @@ type EventImage implements Document {
   """Date the document was last modified"""
   _updatedAt: DateTime
   event: Event
-  event: Event
-  project: Project
   externalId: String
   externalURL: String
 
   """Habilita esta imagen para aparecer en la galería de imágenes"""
   galleryEnabled: Boolean
   image: Image
+  project: Project
   title: String
   url: String
 }
@@ -411,11 +410,11 @@ input EventImageFilter {
   _type: StringFilter
   _updatedAt: DatetimeFilter
   event: EventFilter
-  project: ProjectFilter
   externalId: StringFilter
   externalURL: StringFilter
   galleryEnabled: BooleanFilter
   image: ImageFilter
+  project: ProjectFilter
   title: StringFilter
   url: StringFilter
 }
@@ -431,72 +430,6 @@ input EventImageSorting {
   externalURL: SortOrder
   galleryEnabled: SortOrder
   image: ImageSorting
-  title: SortOrder
-  url: SortOrder
-}
-
-type Event implements Document {
-  """Date the document was created"""
-  _createdAt: DateTime
-
-  """Document ID"""
-  _id: ID
-  _key: String
-
-  """Current document revision"""
-  _rev: String
-
-  """Document type"""
-  _type: String
-
-  """Date the document was last modified"""
-  _updatedAt: DateTime
-  bgColor: String
-  endDate: Date
-  project: Project
-
-  """Habilita este evento para aparecer en la galería de imágenes"""
-  galleryEnabled: Boolean
-  image: Image
-  mergedTitle: Boolean
-  startDate: Date
-  title: String
-  url: String
-}
-
-input EventFilter {
-  """Apply filters on document level"""
-  _: Sanity_DocumentFilter
-  _createdAt: DatetimeFilter
-  _id: IDFilter
-  _key: StringFilter
-  _rev: StringFilter
-  _type: StringFilter
-  _updatedAt: DatetimeFilter
-  bgColor: StringFilter
-  endDate: DateFilter
-  project: ProjectFilter
-  galleryEnabled: BooleanFilter
-  image: ImageFilter
-  mergedTitle: BooleanFilter
-  startDate: DateFilter
-  title: StringFilter
-  url: StringFilter
-}
-
-input EventSorting {
-  _createdAt: SortOrder
-  _id: SortOrder
-  _key: SortOrder
-  _rev: SortOrder
-  _type: SortOrder
-  _updatedAt: SortOrder
-  bgColor: SortOrder
-  endDate: SortOrder
-  galleryEnabled: SortOrder
-  image: ImageSorting
-  mergedTitle: SortOrder
-  startDate: SortOrder
   title: SortOrder
   url: SortOrder
 }
@@ -521,53 +454,6 @@ input EventSorting {
 enum EventStatus {
   active
   inactive
-}
-
-type Project implements Document {
-  """Date the document was created"""
-  _createdAt: DateTime
-
-  """Document ID"""
-  _id: ID
-  _key: String
-
-  """Current document revision"""
-  _rev: String
-
-  """Document type"""
-  _type: String
-
-  """Date the document was last modified"""
-  _updatedAt: DateTime
-  bgColor: String
-  image: Image
-  title: String
-}
-
-input ProjectFilter {
-  """Apply filters on document level"""
-  _: Sanity_DocumentFilter
-  _createdAt: DatetimeFilter
-  _id: IDFilter
-  _key: StringFilter
-  _rev: StringFilter
-  _type: StringFilter
-  _updatedAt: DatetimeFilter
-  bgColor: StringFilter
-  image: ImageFilter
-  title: StringFilter
-}
-
-input ProjectSorting {
-  _createdAt: SortOrder
-  _id: SortOrder
-  _key: SortOrder
-  _rev: SortOrder
-  _type: SortOrder
-  _updatedAt: SortOrder
-  bgColor: SortOrder
-  image: ImageSorting
-  title: SortOrder
 }
 
 enum EventVisibility {
@@ -884,14 +770,6 @@ type RootQuery {
     """EventImage document ID"""
     id: ID!
   ): EventImage
-  Event(
-    """Event document ID"""
-    id: ID!
-  ): Event
-  Project(
-    """Project document ID"""
-    id: ID!
-  ): Project
   Project(
     """Project document ID"""
     id: ID!
@@ -944,24 +822,6 @@ type RootQuery {
     sort: [EventImageSorting!]
     where: EventImageFilter
   ): [EventImage!]!
-  allEvent(
-    """Max documents to return"""
-    limit: Int
-
-    """Offset at which to start returning documents from"""
-    offset: Int
-    sort: [EventSorting!]
-    where: EventFilter
-  ): [Event!]!
-  allProject(
-    """Max documents to return"""
-    limit: Int
-
-    """Offset at which to start returning documents from"""
-    offset: Int
-    sort: [ProjectSorting!]
-    where: ProjectFilter
-  ): [Project!]!
   allProject(
     """Max documents to return"""
     limit: Int

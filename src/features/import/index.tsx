@@ -3,10 +3,11 @@ import { Importer } from "./importer";
 import { Suspense, useEffect, useState } from "react";
 import { ErrorBoundary } from "./errorBoundary";
 import { usePathname, useRouter } from "next/navigation";
-import { SignInButton, SignedIn, SignedOut, useAuth } from "@clerk/clerk-react";
+// import { SignInButton, SignedIn, SignedOut, useAuth } from "@clerk/clerk-react";
 import { AllEventsQuery } from "../../gql/graphql";
 import { useIsSuperAdminSuspenseQuery } from "../../gql/jschileAPI";
 import { Button } from "../../components/ui/button";
+import { useIsLoggedIn } from "../../lib/supabase/AuthProvider";
 
 const ImportImpl = ({
   communityEvents,
@@ -45,26 +46,5 @@ export const Import = ({
     setRedirectUrl(window.location.host);
   }, []);
 
-  return (
-    <>
-      <SignedIn>
-        <ImportImpl communityEvents={communityEvents} />
-      </SignedIn>
-      <SignedOut>
-        {process.env.NEXT_PUBLIC_SIGN_IN_URL ? (
-          <Button asChild variant="secondary">
-            <a
-              href={`${process.env.NEXT_PUBLIC_SIGN_IN_URL}?redirect_url=https://${redirectUrl}`}
-            >
-              Ingresar
-            </a>
-          </Button>
-        ) : (
-          <SignInButton mode="modal" redirectUrl={pathname}>
-            <Button variant="secondary">Ingresar</Button>
-          </SignInButton>
-        )}
-      </SignedOut>
-    </>
-  );
+  return <ImportImpl communityEvents={communityEvents} />;
 };
