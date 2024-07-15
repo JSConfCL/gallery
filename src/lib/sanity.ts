@@ -22,6 +22,8 @@ export type ImageParams = {
   fit?: FitMode;
   crop?: CropMode;
   auto?: AutoMode;
+  rect?: [number, number, number, number];
+  removeRect?: boolean;
 };
 
 export const urlForImage = (
@@ -53,6 +55,15 @@ export const urlForImage = (
     if (params.forceDownload) {
       img = img.forceDownload(params.forceDownload);
     }
-    return img.url();
+    if (params.removeRect) {
+      img = img.rect(0, 0, params.width, params.height);
+      img.url;
+      const url = new URL(img.url());
+      url.searchParams.delete("rect");
+      const finalUrl = url.toString();
+      return finalUrl;
+    } else {
+      return img.url();
+    }
   }
 };

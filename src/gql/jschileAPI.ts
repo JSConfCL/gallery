@@ -30,6 +30,10 @@ export type AllowedCurrency = {
   validPaymentMethods: ValidPaymentMethods;
 };
 
+export type CheckForPurchaseOrderInput = {
+  purchaseOrderId: Scalars['String']['input'];
+};
+
 export enum CommnunityStatus {
   Active = 'active',
   Inactive = 'inactive'
@@ -37,9 +41,11 @@ export enum CommnunityStatus {
 
 /** Representation of a Community */
 export type Community = {
+  banner: Maybe<Scalars['String']['output']>;
   description: Maybe<Scalars['String']['output']>;
   events: Array<Event>;
   id: Scalars['String']['output'];
+  logo: Maybe<Scalars['String']['output']>;
   name: Maybe<Scalars['String']['output']>;
   status: CommnunityStatus;
   users: Array<User>;
@@ -199,6 +205,7 @@ export type EventsSearchInput = {
   startDateTimeFrom: InputMaybe<Scalars['DateTime']['input']>;
   startDateTimeTo: InputMaybe<Scalars['DateTime']['input']>;
   status: InputMaybe<EventStatus>;
+  userHasTickets: InputMaybe<Scalars['Boolean']['input']>;
   visibility: InputMaybe<EventVisibility>;
 };
 
@@ -207,7 +214,6 @@ export type EventsTicketsSearchInput = {
   id: InputMaybe<Scalars['String']['input']>;
   paymentStatus: InputMaybe<TicketPaymentStatus>;
   redemptionStatus: InputMaybe<TicketRedemptionStatus>;
-  status: InputMaybe<TicketStatus>;
 };
 
 export enum Gender {
@@ -224,11 +230,17 @@ export enum Gender {
   TwoSpirit = 'two_spirit'
 }
 
+export type GeneratePaymentLinkInput = {
+  currencyId: Scalars['String']['input'];
+};
+
 export type Mutation = {
   /** Approve a ticket */
   approvalUserTicket: UserTicket;
   /** Cancel a ticket */
   cancelUserTicket: UserTicket;
+  /** Check the status of a purchase order */
+  checkPurchaseOrderStatus: PurchaseOrder;
   /** Attempt to claim a certain ammount of tickets */
   claimUserTicket: RedeemUserTicketResponse;
   /** Create an community */
@@ -275,6 +287,11 @@ export type MutationApprovalUserTicketArgs = {
 
 export type MutationCancelUserTicketArgs = {
   userTicketId: Scalars['String']['input'];
+};
+
+
+export type MutationCheckPurchaseOrderStatusArgs = {
+  input: CheckForPurchaseOrderInput;
 };
 
 
@@ -367,12 +384,47 @@ export type MutationValidateWorkEmailArgs = {
   confirmationToken: Scalars['String']['input'];
 };
 
-export type MyTicketsSearchInput = {
+export type MyTicketsSearchValues = {
   approvalStatus: InputMaybe<TicketApprovalStatus>;
   eventId: InputMaybe<Scalars['String']['input']>;
   paymentStatus: InputMaybe<TicketPaymentStatus>;
   redemptionStatus: InputMaybe<TicketRedemptionStatus>;
-  status: InputMaybe<TicketStatus>;
+};
+
+/** Type used for querying the paginated leaves and it's paginated meta data */
+export type PaginatedEvent = {
+  data: Array<Event>;
+  pagination: Pagination;
+};
+
+export type PaginatedInputEventsSearchInput = {
+  pagination: PaginationSearchInputParams;
+  search: InputMaybe<EventsSearchInput>;
+};
+
+export type PaginatedInputMyTicketsSearchValues = {
+  pagination: PaginationSearchInputParams;
+  search: InputMaybe<MyTicketsSearchValues>;
+};
+
+/** Type used for querying the paginated leaves and it's paginated meta data */
+export type PaginatedUserTicket = {
+  data: Array<UserTicket>;
+  pagination: Pagination;
+};
+
+/** Pagination meta data */
+export type Pagination = {
+  currentPage: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+  totalRecords: Scalars['Int']['output'];
+};
+
+export type PaginationSearchInputParams = {
+  /** Page number, starts at 0 */
+  page: Scalars['Int']['input'];
+  pageSize: Scalars['Int']['input'];
 };
 
 export type PayForPurchaseOrderInput = {
@@ -419,7 +471,6 @@ export type PurchaseOrderInput = {
 };
 
 export enum PurchaseOrderStatusEnum {
-  Cancelled = 'cancelled',
   NotRequired = 'not_required',
   Paid = 'paid',
   Unpaid = 'unpaid'
@@ -438,16 +489,16 @@ export type Query = {
   event: Maybe<Event>;
   /** Get a list of images, that are attached to an event */
   eventImages: Array<SanityAssetRef>;
-  /** Get a list of events. Filter by name, id, status or date */
-  events: Array<Event>;
   /** Get the current user */
   me: User;
   /** Get a list of tickets for the current user */
-  myTickets: Array<UserTicket>;
+  myTickets: PaginatedUserTicket;
   /** Get a list of salaries associated to the user */
   salaries: Array<Salary>;
   /** Search a consolidated payment logs, by date, aggregated by platform and currency_id */
   searchConsolidatedPaymentLogs: Array<ConsolidatedPaymentLogEntry>;
+  /** Get a list of events. Filter by name, id, status or date */
+  searchEvents: PaginatedEvent;
   /** Search on the payment logs by date, and returns a list of payment logs */
   searchPaymentLogs: Array<PublicFinanceEntryRef>;
   status: Scalars['String']['output'];
@@ -500,18 +551,18 @@ export type QueryEventImagesArgs = {
 };
 
 
-export type QueryEventsArgs = {
-  input: InputMaybe<EventsSearchInput>;
-};
-
-
 export type QueryMyTicketsArgs = {
-  input: InputMaybe<MyTicketsSearchInput>;
+  input: PaginatedInputMyTicketsSearchValues;
 };
 
 
 export type QuerySearchConsolidatedPaymentLogsArgs = {
   input: SearchPaymentLogsInput;
+};
+
+
+export type QuerySearchEventsArgs = {
+  input: PaginatedInputEventsSearchInput;
 };
 
 
@@ -595,6 +646,10 @@ export enum SearchableUserTags {
   Donor = 'DONOR'
 }
 
+export enum ServiceErrors {
+  Unauthenticated = 'UNAUTHENTICATED'
+}
+
 /** Representation of a tag. Tags can be associated to many things. An event, a community, etc. */
 export type Tag = {
   description: Maybe<Scalars['String']['output']>;
@@ -613,7 +668,7 @@ export type TagSearchInput = {
 export type Ticket = {
   description: Maybe<Scalars['String']['output']>;
   endDateTime: Maybe<Scalars['DateTime']['output']>;
-  eventId: Scalars['String']['output'];
+  event: Event;
   id: Scalars['ID']['output'];
   /** Whether or not the ticket is free */
   isFree: Scalars['Boolean']['output'];
@@ -631,12 +686,15 @@ export type Ticket = {
 
 export enum TicketApprovalStatus {
   Approved = 'approved',
+  Cancelled = 'cancelled',
   NotRequired = 'not_required',
   Pending = 'pending',
   Rejected = 'rejected'
 }
 
 export type TicketClaimInput = {
+  /** If this field is passed, a purchase order payment link will be generated right away */
+  generatePaymentLink: InputMaybe<GeneratePaymentLinkInput>;
   /** A unique key to prevent duplicate requests, it's optional to send, but it's recommended to send it to prevent duplicate requests. If not sent, it will be created by the server. */
   idempotencyUUIDKey: InputMaybe<Scalars['String']['input']>;
   purchaseOrder: Array<PurchaseOrderInput>;
@@ -676,7 +734,6 @@ export type TicketEditInput = {
 };
 
 export enum TicketPaymentStatus {
-  Cancelled = 'cancelled',
   NotRequired = 'not_required',
   Paid = 'paid',
   Unpaid = 'unpaid'
@@ -685,12 +742,6 @@ export enum TicketPaymentStatus {
 export enum TicketRedemptionStatus {
   Pending = 'pending',
   Redeemed = 'redeemed'
-}
-
-export enum TicketStatus {
-  Active = 'active',
-  Expired = 'expired',
-  Inactive = 'inactive'
 }
 
 export enum TicketTemplateStatus {
@@ -745,7 +796,9 @@ export type UpdateSalaryInput = {
 export type User = {
   bio: Maybe<Scalars['String']['output']>;
   communities: Array<Community>;
+  email: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  imageUrl: Maybe<Scalars['String']['output']>;
   isSuperAdmin: Maybe<Scalars['Boolean']['output']>;
   lastName: Maybe<Scalars['String']['output']>;
   name: Maybe<Scalars['String']['output']>;
@@ -757,8 +810,9 @@ export type UserTicket = {
   approvalStatus: TicketApprovalStatus;
   id: Scalars['ID']['output'];
   paymentStatus: TicketPaymentStatus;
+  purchaseOrder: Maybe<PurchaseOrder>;
   redemptionStatus: TicketRedemptionStatus;
-  status: TicketStatus;
+  ticketTemplate: Ticket;
 };
 
 export enum ValidPaymentMethods {

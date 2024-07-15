@@ -26,6 +26,7 @@ export default function SharedModal({
   direction,
 }: SharedModalProps) {
   const [loaded, setLoaded] = useState(false);
+  const [mainImageLoaded, setMainImageLoaded] = useState(false);
 
   // get images within 15 of the current index
   let filteredImages = useMemo(() => {
@@ -33,7 +34,7 @@ export default function SharedModal({
       (image) =>
         image.index >= index - 15 && image.index <= index + 15 && image,
     );
-  }, [index]);
+  }, [images, index]);
 
   const handlers = useSwipeable({
     onSwipedLeft: () => {
@@ -57,10 +58,26 @@ export default function SharedModal({
       height: navigation ? 853 : 1280,
       quality: 100,
       auto: "format" as "format",
+      removeRect: true,
     }),
     [navigation],
   );
+
   // Preloads the next and previous images
+  useEffect(() => {
+    const image = images ? images[index] : undefined;
+    if (image) {
+      setMainImageLoaded(false);
+      const imageNode = new Image();
+      imageNode.onload = () => {
+        setLoaded(true);
+        setMainImageLoaded(true);
+      };
+      imageNode.loading = "eager";
+      imageNode.src = urlForImage(image.image, options);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index]);
   useEffect(() => {
     let prevImage = images ? images[index - 1] : undefined;
     let prevPrevImage = images ? images[index - 2] : undefined;
@@ -88,7 +105,7 @@ export default function SharedModal({
         nextNextImageNode.src = urlForImage(nextNextImage.image, options);
       }, 100);
     }
-  }, [currentImage, navigation, index]);
+  }, [currentImage, navigation, index, images, options]);
   return (
     <MotionConfig
       transition={{
@@ -117,22 +134,29 @@ export default function SharedModal({
                   exit="exit"
                   className="absolute"
                 >
-                  <NextImage
-                    src={urlForImage(currentImage.image, options)}
-                    width={navigation ? 1280 : 1920}
-                    height={navigation ? 853 : 1280}
-                    priority
-                    alt="Imagen de la JSConf Chile"
-                    onLoadingComplete={() =>
-                      setTimeout(() => setLoaded(true), 300)
-                    }
-                    placeholder="blur"
-                    blurDataURL={currentImage.image.asset.metadata.lqip}
-                    sizes="(max-width: 640px) 25w,
-                    (max-width: 1280px) 33w,
-                    (max-width: 1536px) 100w,
-                    35w"
-                  />
+                  <AnimatePresence mode="popLayout">
+                    {!mainImageLoaded && (
+                      <motion.img
+                        src={currentImage.image.asset.metadata.lqip}
+                        width={navigation ? 1280 : 1920}
+                        height={navigation ? 853 : 1280}
+                        alt="Blur para transicion, de una imagen de la JSConf Chile"
+                        className="z-10 relative"
+                      />
+                    )}
+                    {mainImageLoaded && (
+                      <motion.img
+                        src={urlForImage(currentImage.image, options)}
+                        width={navigation ? 1280 : 1920}
+                        height={navigation ? 853 : 1280}
+                        alt="Imagen de la JSConf Chile"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="relative"
+                      />
+                    )}
+                  </AnimatePresence>
                 </motion.div>
               </AnimatePresence>
             </div>
